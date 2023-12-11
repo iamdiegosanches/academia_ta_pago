@@ -18,8 +18,8 @@ Sistema para gerenciar uma academia
 
 ## ✒️ Autores
 
-* **Diego** - *Desenvolvedor* - [GitHub Graziele](https://github.com/iamdiegosanches)
-* **Álvaro** - *Desenvolvedor* -  [GitHub Laura](https://github.com/oalvarobraz)
+* **Diego** - *Desenvolvedor* - [GitHub Diego](https://github.com/iamdiegosanches)
+* **Álvaro** - *Desenvolvedor* -  [GitHub Álvaro](https://github.com/oalvarobraz)
 
 ---
 ⌨️ com ❤️ por (Discentes Universidade Federal Ouro Preto) 😊

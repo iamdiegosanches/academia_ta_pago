@@ -5,6 +5,7 @@ Sistema para gerenciar uma academia
 ## 🚀 Descrição
 
 ### 📋 Pré-requisitos
+`Node.Js`
 
 ### 🔧 Instalação
 

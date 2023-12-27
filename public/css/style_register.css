@@ -19,7 +19,7 @@ body {
 .card-login {
     position: relative;
     width: 400px;
-    height: 440px;
+    height: 600px;
     background: transparent; /* Fundo transparente */
     border-radius: 20px; /* Bordas arredondadas */
     border: 2px solid rgba(155, 155, 154, 0.5); /* Borda sólida cinza */

@@ -18,13 +18,29 @@ app.set('view engine', 'ejs');
 
 app.use('/public', express.static(`${process.cwd()}/public`));
 
-app.get('/', async (req, res) => {
+app.get('/create-user', (req, res) => {
   try {
-    const result = await pool.query('SELECT * FROM departamento');
-    const rows = result.rows;
-    res.render('login_page', { data: rows });
+    res.render('register_page');
   } catch (error) {
-    console.error('Erro ao executar a consulta SQL:', error);
+    console.error('Ocorreu um erro inesperado:', error);
+    res.status(500).send('Erro interno do servidor');
+  }
+});
+
+app.get('/edit-weight', (req, res) => {
+  try {
+    res.render('edit_weight');
+  } catch (error) {
+    console.error('Ocorreu um erro inesperado:', error);
+    res.status(500).send('Erro interno do servidor');
+  }
+});
+
+app.get('/total-weight', (req, res) => {
+  try {
+    res.render('total_weight');
+  } catch (error) {
+    console.error('Ocorreu um erro inesperado:', error);
     res.status(500).send('Erro interno do servidor');
   }
 });

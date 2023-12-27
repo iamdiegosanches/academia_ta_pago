@@ -1,0 +1,245 @@
+/* Define a formatação geral do corpo da página */
+body {
+    font-family: Arial, sans-serif; /* Define a família de fontes a ser usada */
+    min-height: 100vh; /* Define a altura mínima da área visível da página */
+    background: #1a1a1a; /* Define a cor de fundo do corpo da página */
+    margin: 50px; /* Define as margens externas do corpo da página */
+}
+
+/* Define a formatação do cabeçalho (header) da página */
+header {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif; /* Define a família de fontes a ser usada */
+    position: fixed; /* Define que o cabeçalho ficará fixo no topo da página */
+    top: 0;
+    left: 0;
+}
+
+/* Define a formatação dos elementos de nível H2 */
+h1 {
+    color: #F8F10D; /* Define a cor do texto dos elementos H2 */
+    text-align: center;
+    margin-left: 50px;
+}
+
+h2 {
+    color: #F8F10D; /* Define a cor do texto dos elementos H2 */
+    text-align: center;
+}
+
+
+
+form {
+    width: 500px; /* Define a largura do formulário */
+    border: 1px solid #ccc; /* Define uma borda de 1px sólida de cor cinza (#ccc) */
+    padding: 20px; /* Define o espaçamento interno do formulário */
+    background-color: #fff; /* Define a cor de fundo do formulário */
+    border-radius: 5px; /* Define o raio do arredondamento das bordas do formulário */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Define uma sombra em torno do formulário */
+}
+
+/* Define a formatação das etiquetas (labels) dentro do formulário */
+form label {
+    display: block; /* Define que as etiquetas serão exibidas em bloco (cada uma em uma linha) */
+    margin-bottom: 10px; /* Define o espaçamento inferior das etiquetas */
+    font-weight: bold; /* Define o peso da fonte das etiquetas como negrito */
+}
+
+/* Define a formatação dos campos de entrada de texto (input[type="text"]) e áreas de texto (textarea) no formulário */
+form input[type="text"],
+form textarea {
+    width: 95%; /* Define que os campos ocuparão 100% da largura disponível */
+    padding: 10px; /* Define o espaçamento interno dos campos */
+    margin-bottom: 20px; /* Define o espaçamento inferior dos campos */
+    border: 1px solid #ccc; /* Define uma borda de 1px sólida de cor cinza (#ccc) */
+    border-radius: 5px; /* Define o raio do arredondamento das bordas dos campos */
+    resize: none;
+}
+
+
+  /* Define a formatação do botão dentro do formulário */
+form button {
+    width :100%;
+    height :45px;
+    background-color:#F8F10D;/* Cor de fundo amarela*/
+    border-color:black;/* Cor da borda preta*/
+    font-size :1.3em;/* Tamanho da fonte*/
+    color:black;/* Cor do texto preto*/
+    outline:none;/* Sem contorno*/
+    border-radius:6px;/* Bordas arredondadas*/
+    cursor:pointer;/* Cursor do mouse em forma de ponteiro*/
+    transition:.2s;/* Transição suave ao passar o mouse*/
+}
+  
+  /* Define a formatação do botão quando o cursor do mouse estiver sobre ele */
+form button:hover {
+    background-color:black;/* Cor de fundo preta*/
+    color:white;/* Cor do texto branco*/
+    border-color:#F8F10D;/* Cor da borda amarela*/
+}
+  
+/* Estilize o card-container para usar flexbox */
+.card-container {
+    display: flex;
+    margin-left: 55px;
+    justify-content: space-between;
+}
+    
+.form-group {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 30px;
+}
+  
+/* Estilize a div child */
+.child {
+    flex: 1; /* Faz com que cada div child ocupe uma quantidade igual de espaço */
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin: 10px;
+    background-color: #0F0F0F;
+}
+
+.card {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card-equip {
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+/* Estilizando a barra de rolagem */
+.card-equip::-webkit-scrollbar {
+    width: 10px; /* Largura da barra de rolagem */
+}
+
+/* Estilizando o thumb (a alça) da barra de rolagem */
+.card-equip::-webkit-scrollbar-thumb {
+    background-color: #888; /* Cor do thumb */
+    border-radius: 5px; /* Raio do arredondamento do thumb */
+}
+
+/* Estilizando a parte da barra de rolagem que não é o thumb */
+.card-equip::-webkit-scrollbar-track {
+    background-color: #f1f1f1; /* Cor da parte da barra de rolagem que não é o thumb */
+    border-radius: 5px; /* Raio do arredondamento da parte da barra de rolagem que não é o thumb */
+}
+
+.equip-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.equip-card {
+    flex-basis: calc(33.33% - 20px);
+    background-color: #0F0F0F;
+    color: #F8F10D;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.equip-card::-webkit-scrollbar {
+    width: 10px;
+}
+
+.equip-card::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 5px;
+}
+
+/* Estilizando a parte da barra de rolagem que não é o thumb */
+.equip-card::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
+    border-radius: 5px;
+}
+
+/* Define a formatação dos botões de ação */
+.equip-card .action-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+    min-width: 600px;
+    max-width: 700px;
+}
+
+/* Define a formatação do botão de criar aula */
+.button {
+    background-color: #F8F10D;
+    color: #0F0F0F;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+/* Define a formatação do botão de criar aula quando o cursor do mouse estiver sobre ele */
+.button:hover {
+    background-color: #0F0F0F;
+    color: #F8F10D;
+    border: 1px solid #F8F10D;
+}
+
+/* Define a formatação do botão de criar aula */
+.delete-button {
+    background-color: #F7253A;
+    color: #0F0F0F;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 20px;
+}
+
+/* Define a formatação do botão de criar aula quando o cursor do mouse estiver sobre ele */
+.delete-button:hover {
+    background-color: #0F0F0F;
+    color: #AB0011;
+    border: 1px solid #AB0011;
+}
+
+.equip-list {
+    max-height: 400px; /* Set a maximum height for the lessons container */
+    overflow-y: auto;
+}
+
+.equip-list::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Estilizando o thumb (a alça) da barra de rolagem */
+.equip-list::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 5px;
+}
+
+/* Estilizando a parte da barra de rolagem que não é o thumb */
+.lessons-list::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
+    border-radius: 5px;
+}
+
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 10px;
+}
+
+.form-group label {
+    margin-bottom: 5px;
+}
+
+.form-group input {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}

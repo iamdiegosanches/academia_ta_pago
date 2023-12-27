@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Objetivo Atual</title>
+    <link rel="stylesheet" href="/public/css/style_edit_weight.css">
+</head>
+<body>
+    <h1>Editar Objetivo do Mês</h1>
+    <div class="child">
+        <div class="card">
+            <form id="editPersonalForm" action="" method="POST">
+    
+                <label for="objetivo">Objetivo Atual (kg):</label>
+                <input type="number" id="objetivo" name="objetivo" value="10000.0" readonly required>
+                
+                <div class="form-group">
+                    <label for="nObjetivo">Novo Objetivo (kg):</label>
+                    <input type="number" id="nObjetivo" name="nObjetivo" value="" required>
+                </div>
+        
+                <button type="submit" value="Update">Atualizar Objetivo</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

@@ -149,3 +149,7 @@ h1, h2, h3, h4 {
     padding-bottom: 40px;
 }
 
+.NoData {
+    padding-top: 20px;
+    text-align: center;
+}

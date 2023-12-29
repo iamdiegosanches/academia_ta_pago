@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adicionar Equipamentos</title>
+    <link rel="stylesheet" href="/public/css/style_equip.css">
+</head>
+<body>
+    <div class="card-container">
+        <div class="child">
+          <h2>Editar Equipamento</h2>
+          <div class="card">
+            <form id="createEquipmentForm" method="POST" action="/updateEquipment/<%= equip[0].id%>">
+                <label for="name">Nome:</label>
+                <input type="text" id="name" name="name" value="<%=equip[0].nome %>" required><br>
+      
+                <div class="email">
+                  <label for="email_treinador">Email treinador:</label>
+                  <input type="email" id="email_treinador" name="email_treinador" value="<%=equip[0].email_treinador %>"><br>
+                </div>
+
+                <button type="submit">Update</button>
+            </form>
+          </div>
+        </div>
+
+        <div class="child">
+          <div class="card">
+            <h2>Treinadores</h2>
+              <div class="trainer-list">
+                <% if (trainers.length > 0) { %>
+                  <% for (let i = 0; i < trainers.length; i++) { %>
+                      <div class="card-equip" data-email="<%= trainers[i].email %>">
+                          <p><strong>Nome:</strong> <%= trainers[i].nome %></p>
+                          <p><strong>Email:</strong> <%= trainers[i].email %></p>
+                      </div>
+                  <% } %>
+                <% } else { %>
+                  <p>No trainer data available.</p>
+                <% } %>
+              </div>
+          </div>
+        </div>
+ 
+    </div>
+
+
+
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        const trainers = document.querySelectorAll('.card-equip');
+    
+        trainers.forEach(item => {
+          item.addEventListener('click', function () {
+            const trainerEmail = item.dataset.email;
+            console.log(trainerEmail);
+            document.getElementById('email_treinador').value = trainerEmail;
+          });
+        });
+      });
+    </script>
+</body>
+</html>

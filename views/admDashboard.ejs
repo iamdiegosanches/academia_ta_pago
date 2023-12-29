@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criar cliente</title>
+    <link rel="stylesheet" href="/public/css/style_admDashboard.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+</head>
+
+<body>
+
+    <div class="dashboard">
+        <div class="content">
+            <div class="box">
+                <h2>Equipamentos</h2>
+                <div class="list">
+                    <% if (equipments && equipments.length> 0) { %>
+                        <% for (let i=0; i < equipments.length; i++) { %>
+                            <div class="card">
+                                <p><strong>Id:</strong>
+                                    <%= equipments[i].id %>
+                                </p>
+                                <p><strong>Nome:</strong>
+                                    <%= equipments[i].nome %>
+                                </p>
+                                <p><strong>Email Treinador:</strong>
+                                    <%= equipments[i].email_treinador %>
+                                </p>
+                                <div class="buttons">
+                                    <a href="/deleteEquipment/<%= equipments[i].id %>">
+                                        <button class="btn btn-danger m-1"><i class="material-icons">delete</i></button>
+                                    </a>
+                                    <a href="/updateEquipment/<%= equipments[i].id %>">
+                                        <button class="btn btn-primary m-1"><i class="material-icons">border_color</i></button>
+                                    </a>
+                                </div>
+                            </div>
+                        <% } %>
+                    <% } else { %>
+                        <a href="" class="button">Adicionar Equipamento</a>
+                        <p>No equipment data available.</p>
+                    <% } %>
+                </div>
+            </div>
+
+            <div class="box">
+                <h2>Treinadores</h2>
+                <div class="list">
+                    <% if (trainers && trainers.length> 0) { %>
+                        <% for (let i=0; i < trainers.length; i++) { %>
+                            <div class="card">
+                                <p><strong>CPF:</strong>
+                                    <%= trainers[i].cpf %>
+                                </p>
+                                <p><strong>Nome:</strong>
+                                    <%= trainers[i].nome %>
+                                </p>
+                                <p><strong>Email:</strong>
+                                    <%= trainers[i].email %>
+                                </p>
+                                <p><strong>Data:</strong>
+                                    <%= trainers[i].data %>
+                                </p>
+                                <p><strong>salario:</strong> R$ <%= trainers[i].salario %>
+                                </p>
+                                
+                                <div class="buttons">
+                                    <a href="/deleteTrainer/<%= trainers[i].email %>">
+                                        <button class="btn btn-danger m-1"><i class="material-icons">delete</i></button>        
+                                    </a>
+                                    <a href="/updateTrainer/<%= trainers[i].email %>">
+                                        <button class="btn btn-primary m-1"><i class="material-icons">border_color</i></button>
+                                    </a>
+                                </div>
+                            </div>
+                            <% } %>
+                                <% } else { %>
+                                    <a href="" class="button">Adicionar Treinador</a>
+                                    <p>No trainer data available.</p>
+                                <% } %>
+                </div>
+            </div>
+
+            <div class="box">
+
+                <div class="geral-statistics">
+                    <h2>Estatísticas Gerais</h2>
+                    <p><strong>Total de Treinadore: </strong>
+                        <%= qtdTrainers[0].count %>
+                    </p>
+                    <p><strong>Total de Clientes: </strong>
+                        <%= qtdClients[0].count %>
+                    </p>
+                    <p><strong></strong></p>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

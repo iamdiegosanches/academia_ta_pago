@@ -1,0 +1,151 @@
+body {
+    margin: 0;
+    padding: 0;
+    background: #1a1a1a;
+    color: #fff;
+    font-family: Arial, sans-serif;
+}
+  
+.dashboard {
+    max-width: 1300px;
+    height: 650px;
+    margin: 20px auto;
+    padding-left: 50px;
+    padding-top: 20px;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.content {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.box {
+    background-color: #332F2E;
+    height: 700px;
+    width: 400px;
+    border-radius: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    flex-direction: row;
+}
+  
+h1, h2, h3, h4 {
+    color: #F8F10D;
+}
+
+.list {
+    width: 370px;
+    flex-direction: column;
+    height: 550px;
+    overflow: auto;
+    scroll-snap-type: y mandatory;
+    justify-content: flex-start;
+}
+
+.equip-list {
+    height: 440px;
+}
+
+.clients-list {
+    height: 145px;
+    width: 400px;
+}
+
+.card {
+    flex-shrink: 0;
+    scroll-snap-align: start;
+    flex-basis: calc(33.33% - 20px);
+    background-color: #0F0F0F;
+    color: #F8F10D;
+    padding: 10px;
+    border: 1px solid #F8F10D;
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.card p {
+    color: #fff;
+}
+
+.card p strong {
+    color: #F8F10D;
+}
+
+.list::-webkit-scrollbar {
+    width: 10px;
+}
+
+.list::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 10px;
+}
+
+.list::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
+    border-radius: 5px;
+}
+
+.button {
+    text-decoration: none;
+    background-color: #F8F10D;
+    color: #0F0F0F;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 5px;
+}
+
+.btn-danger {
+    background-color: red;
+    border-radius: 5px;
+    color: #fff;
+}
+
+.buttons {
+    display: flex;
+    justify-content: space-between;   
+}
+
+.btn-primary {
+    background-color: blue;
+    border-radius: 5px;
+    color: #fff;
+}
+
+.btn:hover {
+    background-color: #fff;
+    cursor: pointer;
+}
+
+.btn-danger:hover {
+    color: red;
+}
+
+.btn-primary:hover {
+    color: blue;
+}
+
+
+.button:hover {
+    background-color: #0F0F0F;
+    color: #F8F10D;
+    border: 1px solid #F8F10D;
+}
+
+.geral-statistics {
+    width: 300px;
+}
+
+.geral-statistics h2 {
+    text-align: center;
+    padding-bottom: 40px;
+}
+

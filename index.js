@@ -1,22 +1,25 @@
 const express = require('express');
 const path = require('path');
-const { Pool } = require('pg');
-
+const controller = require('./src/controller');
 const app = express();
-const port = 3000;
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 
-const pool = new Pool ({
-  user: 'postgres',
-  host: 'localhost',
-  database: 'empresa',
-  password: 'admin',
-  port: 5432,
-});
+const PORT = process.env.PORT || 3000;
+
 
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 app.use('/public', express.static(`${process.cwd()}/public`));
+
+function formatDate(dateString) {
+  const date = new Date(dateString);
+  const day = date.getDate().toString().padStart(2, '0');
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const year = date.getFullYear();
+  return `${day}/${month}/${year}`;
+};
 
 app.get('/create-user', (req, res) => {
   try {
@@ -45,7 +48,74 @@ app.get('/total-weight', (req, res) => {
   }
 });
 
+app.get('/', (req, res) => {
+  res.render('login');
+});
+
+
+app.get('/addEquipment', async (req, res) => {
+  try {
+      const trainers = await controller.getAllTrainers(req, res);
+      res.render('add_equipment', { trainers: trainers });
+  } catch (error) {
+      console.log(error);
+  }
+});
+
+
+app.get('/updateEquipment/:id', async (req, res)=>{
+  const data = await controller.getEquipmentById(req, res);
+  const trainers = await controller.getAllTrainers(req, res);
+  res.render('edit_equipment', {equip: data, trainers: trainers});
+});
+
+app.post('/updateEquipment/:id', async (req, res)=>{
+  try{
+      controller.updateEquipment(req, res);
+  }
+  catch(error){
+      console.error('Error updating equipment:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.get('/deleteEquipment/:id', async (req, res)=>{
+  try {
+      controller.removeEquipment(req, res);
+  } catch (error) {
+      console.log(error);
+  }
+}); 
+
+
+app.get('/admDashboard', async (req, res) => {
+  try {
+      const equipmentsPromise = await controller.getAllEquipments(req, res);
+      const trainersPromise = await controller.getAllTrainers(req, res);
+      const qtdTrainers = await controller.qtdTrainers();
+      const qtdClients = await controller.qtdClients();
+
+      const [equipments, trainers] = await Promise.all([equipmentsPromise, trainersPromise]);
+
+      const simplifiedTrainer = trainers.map(trainers => {
+          return {
+              email: trainers.email,
+              cpf: trainers.cpf,
+              nome: trainers.nome,
+              data: formatDate(trainers.data),
+              senha: trainers.senha,
+              salario: trainers.salario,
+          };
+      });
+
+      res.render('admDashboard', { equipments: equipments, trainers: simplifiedTrainer, qtdTrainers: qtdTrainers, qtdClients: qtdClients});
+  } catch (error) {
+      console.log(error);
+      res.status(500).send("Internal Server Error");
+  }
+});
+
 // Iniciar o servidor
-app.listen(port, () => {
-  console.log(`Servidor iniciado em http://localhost:${port}`);
+app.listen(PORT, () => {
+  console.log(`Servidor iniciado em http://localhost:${PORT}`);
 });

@@ -115,6 +115,46 @@ app.get('/admDashboard', async (req, res) => {
   }
 });
 
+app.get('/addTrainer', (req, res) => {
+  res.render('add_trainer');
+});
+
+app.post('/addTrainer', (req, res) => {
+  try {
+      controller.addTrainer(req, res);
+  } catch (error) {
+      console.log('Error in adding Trainer');
+      console.log(error);
+  }
+});
+
+
+app.get('/updateTrainer/:email', async (req, res)=>{
+  const data = await controller.getTrainerByEmail(req, res);
+  res.render('edit_trainer', {trainer: data});
+});
+
+app.post('/updateTrainer/:email', async (req, res)=>{
+  try{
+      controller.updateTrainer(req, res);
+  }
+  catch(error){
+      console.error('Error updating equipment:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.get('/deleteTrainer/:email', async (req, res)=>{
+  try {
+      const validation = controller.countEquipByTrainer(req, res);
+      // Queria fazer uma parte para enviar uma mensagem para o adm confirmar se quer mesmo excluir
+      controller.removeTrainer(req, res);
+  } catch (error) {
+      console.log(error);
+  }
+});
+
+
 // Iniciar o servidor
 app.listen(PORT, () => {
   console.log(`Servidor iniciado em http://localhost:${PORT}`);

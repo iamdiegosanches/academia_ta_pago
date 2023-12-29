@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/public/css/style_registerUso.css">
+    <title>Registrar Uso</title>
+</head>
+<body>
+    <div class="card-container">
+        <div class="child">
+            <h2>Registrar uso</h2>
+            <div class="card">
+                <form id="registerUsoEquip" action="/registrarUso/<%= equipId %>" method="POST">
+                    <label for="data">Data:</label>
+                    <input type="date" id="data" name="data" required><br>
+        
+                    <div class="email">
+                        <label for="email">Email do Cliente:</label>
+                        <input type="email" id="email" name="email" required><br>    
+                    </div>
+
+                    <label for="peso">Peso:</label>
+                    <input type="number" id="peso" name="peso"><br>
+        
+                    <label for="repeticao">Repetição:</label>
+                    <input type="number" id="repeticao" name="repeticao" required><br>
+        
+                    <button type="submit">Registrar</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="child">
+            <div class="card">
+              <h2>Clientes</h2>
+                <div class="clientes-list">
+                  <% if (clientes.length > 0) { %>
+                    <% for (let i = 0; i < clientes.length; i++) { %>
+                        <div class="card-equip" data-email="<%= clientes[i].email %>">
+                            <p><strong>Nome:</strong> <%= clientes[i].nome %></p>
+                            <p><strong>Email:</strong> <%= clientes[i].email %></p>
+                        </div>
+                    <% } %>
+                  <% } else { %>
+                    <p>No client data available.</p>
+                  <% } %>
+                </div>
+            </div>
+          </div>
+
+    </div>
+
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+          const clientes = document.querySelectorAll('.card-equip');
+      
+          clientes.forEach(item => {
+            item.addEventListener('click', function () {
+              const trainerEmail = item.dataset.email;
+              console.log(trainerEmail);
+              document.getElementById('email').value = trainerEmail;
+            });
+          });
+        });
+      </script>
+</body>
+</html>

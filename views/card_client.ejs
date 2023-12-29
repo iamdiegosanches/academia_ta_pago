@@ -1,0 +1,16 @@
+<% if (clients && clients.length > 0) { %>
+    <% for (let i = 0; i < clients.length; i++) { %>
+        <div class="card-equip">
+            <p><strong>Nome:</strong> <%= clients[i].nome %></p>
+            <p><strong>Email:</strong> <%= clients[i].email %></p>
+            <p><strong>Objetivo:</strong> <%= clients[i].objetivo %></p>
+            <% if (clients[i].usage_count) { %>
+                <p><strong>Quantidade de vezes: </strong><%= clients[i].usage_count %></p>
+            <% } %>
+        </div>
+    <% } %>
+<% } else { %>
+    <div class="card-equip">
+        <p>No Client data available.</p>   
+    </div>
+<% } %>

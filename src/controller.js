@@ -2,6 +2,87 @@ const { emit } = require('nodemon');
 const { pool } = require('../dbConfig');
 const queries = require('./queries');
 
+
+const getAllClients = async () => {
+    return new Promise((resolve, reject) => {
+        pool.query(queries.getAllClientes, (error, results) => {
+            if (error) {
+                reject(error);
+            } else {
+                resolve(results.rows);
+            }
+        });
+    });
+};
+
+const getClientByEmail = async (req, res) => {
+    const { email } = req.body;
+
+    pool.query(queries.getClienteByEmail, [email], (error, results) => {
+        if (error) throw error;
+        return results.rows;
+    });
+};
+
+const addClient = async (req, res) => {
+    const { name, email, cpf, dob, password, password2, objetivo } = req.body;
+
+    if (password != password2){
+        res.status(202).send("Senhas não coincidem");
+    } else {
+        pool.query(queries.getClienteByEmail, [email], (error, results) => {
+            if (error) throw error;
+            if (results.rows.length) {
+                res.status(202).send("Email already exists.");
+                console.log('Email already exists.');
+                return;
+            }
+            
+            pool.query(queries.addClient, [name, email, cpf, dob, password, objetivo], (error, results) => {
+                if (error) throw error;
+                res.status(201).send("Client Created Sucessfully!");
+                console.log("Client create");
+            });
+        });
+    }
+};
+
+
+const removeClient = async (req, res)  => {
+    const { email } = req.body;
+
+    pool.query(queries.getClienteByEmail, [email], (error, results) => {
+        if (error) throw error;
+        const noClientFound = !results.rows.length;
+        if (noClientFound){
+            res.send("Client does not exist in the database.");
+        } else {
+            pool.query(queries.deletClient, [email], (error, results) => {
+                if (error) throw error;
+                res.status(200).send("Client removed sucessfully.");
+            })
+        }
+    });
+};
+
+
+const updateClient = (req, res) => {
+    const {name, email, cpf, dob, password, objetivo} = req.body;
+
+    pool.query(queries.getClienteByEmail, [email], (error, results) => {
+        if (error) throw error;
+        const noClientFound = !results.rows.length;
+        if (noClientFound){
+            res.send("Client does not exist in the database.");
+        } else {
+            pool.query(queries.updateClient, [name, email, cpf, dob, password, objetivo], (error, results) => {
+                if (error) throw error;
+                res.status(200).send("Client updated sucessfully.");
+            });
+        }
+    });
+};
+
 const qtdClients = async () => {
     try {
         const results = await pool.query(queries.countClients);
@@ -110,6 +191,37 @@ const qtdEquipments = async () => {
         return results.rows;
     } catch (error) {
         console.log(error);
+    }
+};
+
+
+const getClientsUseEquip = async (req, res, equipId, data) => {
+    try {
+        const results = await pool.query(queries.getClientesWorkoutDayAndEquip, [data, equipId]);
+        return results.rows;
+    } catch (error) {
+        console.log(error);
+        res.status(500).send('Ocorreu um erro ao buscar os dados');
+    }
+};
+
+const getClientsUseEquipThisMonth = async (req, res, equipId, data) => {
+    try {
+        const results = await pool.query(queries.getClientesWorkoutMonthAndEquip, [data, equipId]);
+        return results.rows;
+    } catch (error) {
+        console.log(error);
+        res.status(500).send('Ocorreu um erro ao buscar os dados');
+    }
+};
+
+const getClientsUseEquipMostThisYear = async (req, res, equipId, data) => {
+    try {
+        const results = await pool.query(queries.getClientesWorkoutYearAndEquip, [data, equipId]);
+        return results.rows;
+    } catch (error) {
+        console.log(error);
+        res.status(500).send('Ocorreu um erro ao buscar os dados');
     }
 };
 
@@ -250,8 +362,13 @@ const registrarUso = async (req, res) => {
 
 
 module.exports = {
+    getAllClients,
+    getClientByEmail,
+    addClient,
+    removeClient,
     removeEquipment,
     removeTrainer,
+    updateClient,
     updateEquipment,
     updateTrainer,
     getAllEquipments,
@@ -261,9 +378,12 @@ module.exports = {
     getEquipmentById,
     getTrainerByEmail,
     addTrainer,
+    getClientsUseEquip,
+    getClientsUseEquipThisMonth,
+    getClientsUseEquipMostThisYear,
+    qtdClients,
+    qtdEquipments,
     qtdTrainers,
     countEquipByTrainer,
     registrarUso,
-    qtdClients,
-    qtdEquipments,
 };

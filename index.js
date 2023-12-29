@@ -155,6 +155,82 @@ app.get('/deleteTrainer/:email', async (req, res)=>{
 });
 
 
+app.get('/trainerDashboard/:email', async (req, res) => {
+  try {
+      const isTrainer = await controller.getTrainerByEmail(req, res);
+      if (isTrainer.length){
+          const equip = await controller.getEquipmentByPersonal(req, res);
+          if (equip.length == 0) {
+              const clientsUseEquip = [];
+              res.render('trainerDashboard', { equip: equip, clients: clientsUseEquip });
+          } else {
+              const data = new Date();
+              console.log(equip)
+              const clientsUseEquip = await controller.getClientsUseEquip(req, res, equip[0].id, data);
+              res.render('trainerDashboard', { equip: equip, clients: clientsUseEquip });
+          }
+      } else {
+          res.status(500).send("Trainer not exists");
+      }
+  } catch (error) {
+      console.log(error);
+      res.status(500).send("Internal Server Error");
+  }
+});
+
+app.get('/trainerDashboard/:email/:filter', async (req, res) => {
+  try {
+      const isTrainer = await controller.getTrainerByEmail(req, res);
+      if (isTrainer.length) {
+          const equip = await controller.getEquipmentByPersonal(req, res);
+          let data;
+
+          switch (req.params.filter) {
+              case 'today':
+                  data = await controller.getClientsUseEquip(req, res, equip[0].id, new Date());
+                  break;
+              case 'yesterday':
+                  let yesterday = new Date();
+                  yesterday.setDate(yesterday.getDate() - 1);
+                  data = await controller.getClientsUseEquip(req, res, equip[0].id, yesterday);
+                  break;
+              case 'thisMonth':
+                  data = await controller.getClientsUseEquipThisMonth(req, res, equip[0].id, new Date());
+                  break;
+              case 'mostUsed':
+                  data = await controller.getClientsUseEquipMostThisYear(req, res, equip[0].id, new Date());
+                  break;
+          }
+
+          res.render('card_client', { clients: data });
+      } else {
+          res.status(500).send("Trainer not exists");
+      }
+  } catch (error) {
+      console.log(error);
+      res.status(500).send("Internal Server Error");
+  }
+});
+
+app.get('/registrarUso/:id', async (req, res) => {
+  try {
+      const equipId = req.params.id;
+      const clientes = await controller.getAllClients();
+      res.render('registrar_Uso', {equipId: equipId, clientes: clientes});
+  } catch (error) {
+      console.log(error);
+      res.status(500).send('Internal Server Error');
+  }
+});
+
+app.post('/registrarUso/:id', (req, res) => {
+  try {
+      controller.registrarUso(req, res);
+  } catch (error) {
+      console.log(error);
+  }
+});
+
 // Iniciar o servidor
 app.listen(PORT, () => {
   console.log(`Servidor iniciado em http://localhost:${PORT}`);

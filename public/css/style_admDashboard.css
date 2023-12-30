@@ -133,7 +133,6 @@ h1, h2, h3, h4 {
     color: blue;
 }
 
-
 .button:hover {
     background-color: #0F0F0F;
     color: #F8F10D;
@@ -152,4 +151,38 @@ h1, h2, h3, h4 {
 .NoData {
     padding-top: 20px;
     text-align: center;
+}
+
+.list-horizontal {
+    display: flex;
+    flex-direction: row;
+    height: 300px;
+    overflow-x: auto;
+}
+
+.card-client {
+    flex-shrink: 0;
+    scroll-snap-align: start;
+    background-color: #0F0F0F;
+    color: #F8F10D;
+    padding: 10px;
+    border: 1px solid #F8F10D;
+    border-radius: 5px;
+    min-width: 350px;
+    margin-left: 15px;
+    max-height: 230px;
+}
+
+.list-horizontal::-webkit-scrollbar {
+    width: 10px;
+}
+
+.list-horizontal::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 10px;
+}
+
+.list-horizontal::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
+    border-radius: 5px;
 }

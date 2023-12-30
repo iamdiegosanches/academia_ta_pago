@@ -94,6 +94,18 @@ app.get('/admDashboard', async (req, res) => {
       const trainersPromise = await controller.getAllTrainers(req, res);
       const qtdTrainers = await controller.qtdTrainers();
       const qtdClients = await controller.qtdClients();
+      const clientes = await controller.getAllClients();
+
+      const simplifiedClient = clientes.map(clientes => {
+        return {
+          email: clientes.email,
+          cpf: clientes.cpf,
+          nome: clientes.nome,
+          data: formatDate(clientes.data),
+          senha: clientes.senha,
+          objetivo: clientes.objetivo,
+        };
+      });
 
       const [equipments, trainers] = await Promise.all([equipmentsPromise, trainersPromise]);
 
@@ -108,7 +120,7 @@ app.get('/admDashboard', async (req, res) => {
           };
       });
 
-      res.render('admDashboard', { equipments: equipments, trainers: simplifiedTrainer, qtdTrainers: qtdTrainers, qtdClients: qtdClients});
+      res.render('admDashboard', { equipments: equipments, trainers: simplifiedTrainer, qtdTrainers: qtdTrainers, qtdClients: qtdClients, clients: simplifiedClient});
   } catch (error) {
       console.log(error);
       res.status(500).send("Internal Server Error");

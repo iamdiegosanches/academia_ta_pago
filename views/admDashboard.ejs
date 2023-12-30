@@ -101,6 +101,44 @@
                     <button class="button">Adicionar Cliente</button>
                 </div>
 
+
+                <div class="list-horizontal">
+                    <% if (clients && clients.length> 0) { %>
+                        <% for (let i=0; i < clients.length; i++) { %>
+                            <div class="card-client">
+                                <p><strong>CPF:</strong>
+                                    <%= clients[i].cpf %>
+                                </p>
+                                <p><strong>Nome:</strong>
+                                    <%= clients[i].nome %>
+                                </p>
+                                <p><strong>Email:</strong>
+                                    <%= clients[i].email %>
+                                </p>
+                                <p><strong>Data:</strong>
+                                    <!-- Não sei pq não estava funcionando o formateData-->
+                                </p>
+                                <p><strong>Objetivo:</strong> <%= clients[i].objetivo %>
+                                </p>
+                                
+                                <div class="buttons">
+                                    <a href="/deleteClient/<%= clients[i].email %>">
+                                        <button class="btn btn-danger m-1"><i class="material-icons">delete</i></button>        
+                                    </a>
+                                    <a href="/updateClient/<%= clients[i].email %>">
+                                        <button class="btn btn-primary m-1"><i class="material-icons">border_color</i></button>
+                                    </a>
+                                </div>
+                            </div>
+                            <% } %>
+                                <% } else { %>
+                                    <div class="NoData">
+                                        <a href="/addClient" class="button">Adicionar Client</a>
+                                        <p>No trainer data available.</p>    
+                                    </div>
+                                <% } %>
+                </div>
+
             </div>
         </div>
     </div>

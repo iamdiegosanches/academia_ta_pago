@@ -93,7 +93,7 @@ const updateEquipment = "UPDATE equipamento SET id = $1, nome = $2, email_treina
 const deletEquipment = "DELETE FROM equipamento WHERE id = $1";
 
 // Retornar a quantidade de equipamentos
-const countEquipments = "SELECT COUNT(e.id) FROM equipamentos e";
+const countEquipments = "SELECT COUNT(e.id) FROM equipamento e";
 
 // Retornar a quantidade de equipamentos que um treinador toma conta
 const countEquipByTrainer = "SELECT COUNT(e.id) FROM equipamento e WHERE e.email_treinador = $1";

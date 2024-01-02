@@ -12,21 +12,16 @@
     <div class="card-container">
         <div class="child">
             <div class="equip-container">
-                    <!-- Loop por todas os registros de pesos de determinado cliente -->
-                    <%  %> 
+                    <% for (let i = 0; i < totalWeightData.length; i++) { %> 
                             <div class="equip-item equip-card">
-                                <p><strong>Data:</strong>   </p>
-                                <p><strong>Peso:</strong>   </p>
-                                <p><strong>Status:</strong></p>  <!--Pago ou não pago -->
+                                <p><strong>Ano/Mês:</strong> <%= totalWeightData[i].month_year %></p>
+                                <p><strong>Peso Total:</strong> <%= totalWeightData[i].total_peso %> kg</p>
+                                <p><strong>Status:</strong></p>  <!-- ToDo: Adicionar a lógica para exibir status -->
                             </div>
-                   
-                    <%  %>
+                    <% } %>
             </div>
         </div>
     </div>
-        
 </body>
 
 </html>
-
-

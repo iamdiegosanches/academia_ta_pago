@@ -26,7 +26,7 @@ const getClientByEmail = async (email) => {
         }
       });
     });
-  };
+};
 
 const addClient = async (req, res) => {
     const { name, email, cpf, dob, password, password2, objetivo } = req.body;
@@ -268,15 +268,16 @@ const getAllTrainers = async (req, res) => {
     }
 };
 
-const getTrainerByEmail = async (req, res) => {
-    try {
-        const email = req.params.email;
-
-        const results = await pool.query(queries.getTreinadorByEmail, [email]);
-        return results.rows;
-    } catch (error) {
-        console.log(error);
-    }
+const getTrainerByEmail = async (email) => {
+    return new Promise((resolve, reject) => {
+        pool.query(queries.getTreinadorByEmail, [email], (error, results) => {
+            if (error) {
+                reject(error);
+            } else {
+                resolve(results.rows[0]);
+            }
+        })
+    })
 };
 
 const addTrainer = async (req, res) => {

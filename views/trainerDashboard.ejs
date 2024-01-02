@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/public/css/style_trainerDash.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <title>Dashboard</title>
+</head>
+<body>
+    
+    <div class="dashboard">
+        <div class="content">
+
+            <div class="box">
+                <h2>Equipamento</h2>
+                <div class="card">
+                    <div class="list-equip">
+                        <% if (equip && equip.length > 0) { %>
+                            <% for (let i = 0; i < equip.length; i++) { %>
+                                <div class="card-equip">
+                                    <p><strong>Id:</strong> <%= equip[i].id %></p>
+                                    <p><strong>Nome:</strong> <%= equip[i].nome %></p>
+                                    <p><strong>Email Treinador:</strong> <%= equip[i].email_treinador %></p>
+                                </div>
+                            <% } %>
+                        <% } else { %>
+                            <div class="card-equip alert">
+                                <p>You don't have any equipment.</p>
+                                <p><strong>If this is an issue, please contact your boss to have your equipment added to the database.</strong></p>
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+
+                <% if (equip) { %>
+                    <h2>Clientes que usaram o equipamento</h2>
+                <div class="filter">
+                    <select id="filter">
+                        <option value="today">Hoje</option>
+                        <option value="yesterday">Ontem</option>
+                        <option value="thisMonth">Esta Semana</option>
+                        <option value="mostUsed">Mais Usado Este Ano</option>
+                    </select>
+                    <button id="applyFilter">Aplicar Filtro</button>    
+                </div>
+                <div class="card">
+                    <div class="list" id="clientData">
+                        <% if (clients && clients.length > 0) { %>
+                            <% for (let i = 0; i < clients.length; i++) { %>
+                                <div class="card-equip">
+                                    <p><strong>Nome:</strong> <%= clients[i].nome %></p>
+                                    <p><strong>Email:</strong> <%= clients[i].email %></p>
+                                    <p><strong>Objetivo:</strong> <%= clients[i].objetivo %></p>
+                                </div>
+                            <% } %>
+                        <% } else { %>
+                            <div class="card-equip">
+                                <p>No Client data available.</p>
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+
+                <% if (equip && equip.length > 0) { %>
+                    <div class="registrar">
+                        <button><a class="button" href="/registrarUso/<%= equip[0].id %>">Adicionar registro</a></button>
+                    </div>
+                <% } %>
+                <% } %>
+            </div>
+
+        </div>
+    </div>
+
+    
+<script>
+$(document).ready(function(){
+    $('#applyFilter').click(function(){
+        var filter = $('#filter').val();
+        console.log(filter);
+        
+        <% if (equip && equip.length > 0) { %>
+            $.ajax({
+                url: '/trainerDashboard/<%= equip[0].email_treinador %>/' + filter,
+                type: 'GET',
+                success: function(data){
+                    $('#clientData').html(data);
+                }
+            });
+        <% } else { %>
+            console.log('No equipment associated with the trainer.');
+        <% } %>
+    });
+});
+
+</script>
+
+</body>
+</html> 

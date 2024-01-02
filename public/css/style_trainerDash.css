@@ -1,0 +1,135 @@
+body {
+    margin: 0;
+    padding: 0;
+    background: #1a1a1a;
+    color: #fff;
+    font-family: Arial, sans-serif;
+}
+  
+.dashboard {
+    max-width: 1300px;
+    height: 650px;
+    margin: 20px auto;
+    padding-left: 50px;
+    padding-top: 20px;
+}
+
+.content {
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    justify-content: space-around;
+    gap: 20px;
+}
+
+.box {
+    background-color: #332F2E;
+    height: 700px;
+    width: 400px;
+    border-radius: 10px;
+}
+  
+h1, h2, h3, h4 {
+    color: #F8F10D;
+    text-align: center;
+}
+
+.list {
+    flex-direction: column;
+    height: 300px;
+    overflow: auto;
+    scroll-snap-type: y mandatory;
+}
+
+
+.list::-webkit-scrollbar {
+    width: 10px;
+}
+
+.list::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 5px;
+}
+
+.list::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
+    border-radius: 5px;
+}
+
+.card-equip {
+    scroll-snap-align: start;
+    background-color: #0F0F0F;
+    color: #F8F10D;
+    padding: 10px;
+    border: 1px solid #F8F10D;
+    border-radius: 5px;
+    margin: 15px;
+}
+
+.card-equip p {
+    color: #fff;
+}
+
+.card-equip p strong {
+    color: #F8F10D;
+}
+
+select {
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.filter {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    padding-bottom: 20px;
+}
+
+.filter select {
+    padding: 5px;
+}
+
+.filter button {
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+}
+
+
+.filter button:hover {
+    background-color: #f8f00d9f;
+}
+
+.alert p strong, .alert p{
+    color: red;
+
+}
+
+.registrar {
+    margin-top: 10px;
+    text-align: center;
+}
+
+button {
+    background-color: #F8F10D;
+    cursor: pointer;
+    border-radius: 5px;
+    border: 1px solid #0F0F0F;
+}
+
+button a {
+    text-decoration: none;
+    color: #0F0F0F;
+}
+
+button:hover {
+    background-color: #0F0F0F;
+    cursor: pointer;
+    border-radius: 5px;
+    border: 1px solid #F8F10D;
+}
+
+button a:hover {
+    color: #F8F10D;
+}

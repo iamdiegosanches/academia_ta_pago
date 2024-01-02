@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adicionar Treinador</title>
+    <link rel="stylesheet" href="/public/css/style_trainer.css">
+</head>
+<body>
+      
+    <div class="card-container">
+        <div class="child">
+          <h2>Adicionar Treinador</h2>
+          <div class="card">
+            <form id="createTrainerForm" method="POST" action="/addTrainer">
+                <label for="name">Nome:</label>
+                <input type="text" id="name" name="name" required><br>
+      
+                <div class="email">
+                  <label for="email">Email:</label>
+                  <input type="email" id="email" name="email" required><br>
+                </div>
+      
+                <div class="cpf">
+                  <label for="cpf">CPF:</label>
+                  <input type="text" id="cpf" name="cpf" required><br>
+                </div>
+      
+                <label for="dob">Data Nascimento:</label>
+                <input type="date" id="dob" name="dob" required><br>
+      
+                <label for="salario">Salario:</label>
+                <input type="text" id="salario" name="salario" required><br>
+
+                <label for="password">Senha:</label>
+                <input type="password" id="password" name="password" required><br>
+      
+                <label for="password2">Confirme a senha:</label>
+                <input type="password" id="password2" name="password2" required><br>
+
+                <button type="submit">Adicionar Treinador</button>
+            </form>
+          </div>
+        </div>
+    </div>
+    
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script>
+      const cpfInput = document.querySelector('#cpf');
+    
+      cpfInput.addEventListener('input', (event) => {
+        let value = event.target.value;
+        value = value.replace(/\D/g, '');
+        value = value.replace(/(\d{3})(\d)/, '$1.$2');
+        value = value.replace(/(\d{3})(\d)/, '$1.$2');
+        value = value.replace(/(\d{3})(\d{1,2})/, '$1-$2');
+        event.target.value = value;
+      });
+    </script>
+</body>
+</html>

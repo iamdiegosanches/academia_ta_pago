@@ -2,16 +2,22 @@ const express = require('express');
 const path = require('path');
 const controller = require('./src/controller');
 const app = express();
+const jwt = require('jsonwebtoken');
+const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
+const jwtSecret = process.env.JWT_SECRET;
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
 const PORT = process.env.PORT || 3000;
 
-
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 app.use('/public', express.static(`${process.cwd()}/public`));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 function formatDate(dateString) {
   const date = new Date(dateString);
@@ -39,9 +45,29 @@ app.get('/edit-weight', (req, res) => {
   }
 });
 
-app.get('/total-weight', (req, res) => {
+// ToDo: testar essa funcionalidade
+app.post('/edit-weight', (req, res) => {
   try {
-    res.render('total_weight');
+    controller.updateWeight(req, res);
+  } catch (error) {
+    res.status(500).json({ error: 'Erro interno do servidor', details: error.message });
+  }
+});
+
+app.get('/weight-of-day', async (req, res) => {
+  try {
+    // const totalWeightData = await controller.getTWeight(req, res);
+    res.render('day_weight');
+  } catch (error) {
+    console.error('Ocorreu um erro inesperado:', error);
+    res.status(500).send('Erro interno do servidor');
+  }
+});
+
+app.get('/total-weight', async (req, res) => {
+  try {
+    const totalWeightData = await controller.getTWeight(req, res);
+    res.render('total_weight', { totalWeightData: totalWeightData });
   } catch (error) {
     console.error('Ocorreu um erro inesperado:', error);
     res.status(500).send('Erro interno do servidor');
@@ -52,6 +78,27 @@ app.get('/', (req, res) => {
   res.render('login');
 });
 
+// ToDo: Adicionar a logica para o admin e para o treinador
+app.post('/', async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const client = await controller.getClientByEmail(email);
+    if (!client) {
+      return res.status(500).send('Cliente inexistente'); // ToDo: tratar isso melhor
+    } else {
+      if (password === client.senha) { // ToDo: criptografia
+        const token = jwt.sign({ userId: email, role: 'client' }, jwtSecret);
+        res.cookie('token', token, { httpOnly: true });
+        res.redirect('/total-weight'); // ToDo: dashboard do cliente
+      } else {
+        return res.status(500).send('Senha invalida'); // ToDo: tratar isso melhor
+      }
+    }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).send('Erro interno do servidor');
+  }
+});
 
 app.get('/addEquipment', async (req, res) => {
   try {
@@ -143,7 +190,6 @@ app.post('/addTrainer', (req, res) => {
   }
 });
 
-
 app.get('/updateTrainer/:email', async (req, res)=>{
   const data = await controller.getTrainerByEmail(req, res);
   res.render('edit_trainer', {trainer: data});
@@ -168,7 +214,6 @@ app.get('/deleteTrainer/:email', async (req, res)=>{
       console.log(error);
   }
 });
-
 
 app.get('/trainerDashboard/:email', async (req, res) => {
   try {
@@ -246,7 +291,7 @@ app.post('/registrarUso/:id', (req, res) => {
   }
 });
 
-// Iniciar o servidor
+// Inicia o servidor
 app.listen(PORT, () => {
   console.log(`Servidor iniciado em http://localhost:${PORT}`);
 });

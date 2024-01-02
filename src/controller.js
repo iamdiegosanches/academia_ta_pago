@@ -1,7 +1,8 @@
 const { emit } = require('nodemon');
 const { pool } = require('../dbConfig');
 const queries = require('./queries');
-
+const jwtSecret = process.env.JWT_SECRET;
+const jwt = require('jsonwebtoken');
 
 const getAllClients = async () => {
     return new Promise((resolve, reject) => {
@@ -15,14 +16,17 @@ const getAllClients = async () => {
     });
 };
 
-const getClientByEmail = async (req, res) => {
-    const { email } = req.body;
-
-    pool.query(queries.getClienteByEmail, [email], (error, results) => {
-        if (error) throw error;
-        return results.rows;
+const getClientByEmail = async (email) => {
+    return new Promise((resolve, reject) => {
+      pool.query(queries.getClienteByEmail, [email], (error, results) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(results.rows[0]);
+        }
+      });
     });
-};
+  };
 
 const addClient = async (req, res) => {
     const { name, email, cpf, dob, password, password2, objetivo } = req.body;
@@ -47,7 +51,6 @@ const addClient = async (req, res) => {
     }
 };
 
-
 const removeClient = async (req, res)  => {
     const { email } = req.body;
 
@@ -55,16 +58,15 @@ const removeClient = async (req, res)  => {
         if (error) throw error;
         const noClientFound = !results.rows.length;
         if (noClientFound){
-            res.send("Client does not exist in the database.");
+            res.send("Cliente não existe no banco de dados.");
         } else {
-            pool.query(queries.deletClient, [email], (error, results) => {
+            pool.query(queries.deleteClient , [email], (error, results) => {
                 if (error) throw error;
                 res.status(200).send("Client removed sucessfully.");
             })
         }
     });
 };
-
 
 const updateClient = (req, res) => {
     const {name, email, cpf, dob, password, objetivo} = req.body;
@@ -73,11 +75,11 @@ const updateClient = (req, res) => {
         if (error) throw error;
         const noClientFound = !results.rows.length;
         if (noClientFound){
-            res.send("Client does not exist in the database.");
+            res.send("Cliente não existe no banco de dados.");
         } else {
             pool.query(queries.updateClient, [name, email, cpf, dob, password, objetivo], (error, results) => {
                 if (error) throw error;
-                res.status(200).send("Client updated sucessfully.");
+                res.status(200).send("Cliente atualizado com sucesso.");
             });
         }
     });
@@ -92,9 +94,39 @@ const qtdClients = async () => {
     }
 };
 
+const getTWeight = async (req, res) => {
+    try {
+        const token = req.cookies.token;
+        const decodedToken = jwt.verify(token, jwtSecret);
+        const userEmail = decodedToken.userId;
+        
+        const results = await pool.query(queries.getTotalWeight, [userEmail]);
+        return results.rows;
+    } catch (error) {
+        console.error('Ocorreu um erro inesperado:', error);
+        res.status(500).send('Erro interno do servidor');
+    }
+}
+
+const updateWeight = (req, res) => {
+    const {email, weigth} = req.body; // Recebe o email logado e o peso da solicitação
+    pool.query(queries.getClienteByEmail, [email], (error, results) => {
+        if (error) throw error;
+        const noClientFound = !results.rows.length;
+        if (noClientFound){
+            res.send("Cliente inexistente.");
+        } else {
+            pool.query(queries.updateClient, [email, weigth], (error, results) => {
+                if (error) throw error;
+                res.status(200).send("Peso atualizado com sucesso.");
+            });
+        }
+    });
+};
+
 const getAllEquipments = async (req, res) => {
     try {
-        const results = await pool.query(queries.getAllEquipamentos);
+        const results = await pool.query(queries.getAllEquipments);
         return results.rows;
     } catch (error) {
         console.error(error);
@@ -131,13 +163,13 @@ const addEquipment = (req, res) => {
 const removeEquipment = async (req, res)  => {
     const id = req.params.id;
 
-    pool.query(queries.getEquipamentoByID, [id], (error, results) => {
+    pool.query(queries.getEquipmentByID, [id], (error, results) => {
         if (error) throw error;
         const noEquipFound = !results.rows.length;
         if (noEquipFound){
             res.send("Equipment does not exist in the database.");
         } else {
-            pool.query(queries.deletEquipment, [id], (error, results) => {
+            pool.query(queries.deleteEquipment, [id], (error, results) => {
                 if (error) throw error;
                 res.status(200).send("Equipment removed sucessfully.");
             })
@@ -149,15 +181,15 @@ const updateEquipment = (req, res) => {
     const id = req.params.id;
     const {name, email_treinador} = req.body;
 
-    pool.query(queries.getEquipamentoByID, [id], (error, results) => {
+    pool.query(queries.getEquipmentByID, [id], (error, results) => {
         if (error) throw error;
         const noEquipmentFound = !results.rows.length;
         if (noEquipmentFound){
-            res.send("Equipment does not exist in the database.");
+            res.send("Equipamento inexistente no banco de dados.");
         } else {
             pool.query(queries.updateEquipment, [id, name, email_treinador], (error, results) => {
                 if (error) throw error;
-                res.status(200).send("Equipment updated sucessfully.");
+                res.status(200).send("Equipamento atualizado com sucesso.");
             });
         }
     });
@@ -178,7 +210,7 @@ const getEquipmentByPersonal = async (req, res) => {
 const getEquipmentById = async (req, res) => {
     try {
         const id = req.params.id;
-        const equip = await pool.query(queries.getEquipamentoByID, [id]);
+        const equip = await pool.query(queries.getEquipmentByID, [id]);
         return equip.rows;
     } catch (error) {
         console.log(error);
@@ -232,7 +264,7 @@ const getAllTrainers = async (req, res) => {
         return results.rows;
     } catch (error) {
         console.error(error);
-        res.status(500).send("Internal Server Error");
+        res.status(500).send("Erro interno do servidor");
     }
 };
 
@@ -290,7 +322,7 @@ const removeTrainer = async (req, res)  => {
         if (noTrainerFound){
             res.send("Trainer does not exist in the database.");
         } else {
-            pool.query(queries.deletTreinador, [email], (error, results) => {
+            pool.query(queries.deleteTrainer, [email], (error, results) => {
                 if (error) throw error;
                 res.status(200).send("Trainer removed sucessfully.");
             })
@@ -366,6 +398,8 @@ module.exports = {
     getAllClients,
     getClientByEmail,
     addClient,
+    getTWeight,
+    updateWeight,
     removeClient,
     removeEquipment,
     removeTrainer,

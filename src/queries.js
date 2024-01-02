@@ -6,12 +6,10 @@ const addClient = `
     (zz, email, cpf, data, senha, objetivo) 
     VALUES ($1, $2, $3, $4, $5, $6)`;
 
-// Selecionar todos os clientes
 const getAllClientes = `
     SELECT * 
     FROM cliente`;
 
-// Selecionar cliente pelo email
 const getClienteByEmail = `
     SELECT * 
     FROM CLIENTE 
@@ -67,21 +65,17 @@ const getClientesWorkoutYearAndEquip = `
     LIMIT 1
 `;
 
-
-// Update o cliente
 const updateClient = `
     UPDATE cliente 
     SET email = $1, cpf = $2, nome = $3, data = $4, senha = $5, objetivo = $6 
     WHERE email = $7
 `;
 
-// Deletar o cliente
 const deleteClient = `
     DELETE FROM cliente 
     WHERE email = $1
 `;
 
-// Retornar a quantidade de clientes
 const countClients = `
     SELECT COUNT(c.cpf) 
     FROM cliente c
@@ -148,20 +142,17 @@ const countTrainersCPF = `
     WHERE t.cpf = $1
 `;
 
-// Update o treinador
 const updateTrainer = `
     UPDATE treinador 
     SET email = $1, cpf = $2, nome = $3, data = $4, senha = $5, salario = $6 
     WHERE email = $1
 `;
 
-// Deletar o treinador
 const deleteTrainer = `
     DELETE FROM treinador 
     WHERE email = $1
 `;
 
-// Retornar a quantidade de treinadores
 const countTrainers = `
     SELECT COUNT(t.cpf) 
     FROM treinador t

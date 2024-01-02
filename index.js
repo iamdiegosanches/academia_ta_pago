@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const controller = require('./src/controller');
+const authMiddleware = require('./middlewares/authmiddleware');
 const app = express();
 const jwt = require('jsonwebtoken');
 const bodyParser = require('body-parser');
@@ -64,7 +65,7 @@ app.get('/weight-of-day', async (req, res) => {
   }
 });
 
-app.get('/total-weight', async (req, res) => {
+app.get('/total-weight', authMiddleware(['client']) , async (req, res) => {
   try {
     const totalWeightData = await controller.getTWeight(req, res);
     res.render('total_weight', { totalWeightData: totalWeightData });
@@ -78,13 +79,24 @@ app.get('/', (req, res) => {
   res.render('login');
 });
 
-// ToDo: Adicionar a logica para o admin e para o treinador
+// ToDo: Adicionar a logica para o admin 
 app.post('/', async (req, res) => {
   const { email, password } = req.body;
   try {
     const client = await controller.getClientByEmail(email);
     if (!client) {
-      return res.status(500).send('Cliente inexistente'); // ToDo: tratar isso melhor
+      const trainer = await controller.getTrainerByEmail(email)
+      if(!trainer) {
+        return res.status(500).send('Falha no login'); // ToDo: tratar isso melhor
+      } else {
+        if (password === trainer.senha) {
+          const token = jwt.sign({ userId: email, role: 'trainer' }, jwtSecret);
+          res.cookie('token', token, { httpOnly: true });
+          res.redirect('/admDashboard'); // Alterar para a dashboard do personal
+        } else {
+          return res.status(500).send('Senha invalida'); // ToDo: melhorar tratamento para a falha de senha
+        }
+      }
     } else {
       if (password === client.senha) { // ToDo: criptografia
         const token = jwt.sign({ userId: email, role: 'client' }, jwtSecret);

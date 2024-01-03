@@ -196,6 +196,47 @@ app.get('/admDashboard', async (req, res) => {
   }
 });
 
+app.get('/addClient', (req, res) => {
+  res.render('add_client');
+});
+
+app.post('/addClient', (req, res) => {
+  try {
+      controller.addClient(req, res);
+  } catch (error) {
+      console.log('Error in adding Client');
+      console.log(error);
+  }
+});
+
+app.get('/updateClient/:email', async (req, res)=>{
+  try {
+    const data = await controller.getClientByEmail(req.params.email);
+    res.render('edit_client', {client: data});
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+app.post('/updateClient/:email', async (req, res)=>{
+  try{
+      controller.updateClient(req, res);
+  }
+  catch(error){
+      console.error('Error updating client:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.get('/deleteClient/:email', async (req, res)=>{
+  try {
+      // Queria fazer uma parte para enviar uma mensagem para o adm confirmar se quer mesmo excluir
+      controller.removeClient(req, res);
+  } catch (error) {
+      console.log(error);
+  }
+});
+
 app.get('/addTrainer', (req, res) => {
   res.render('add_trainer');
 });
@@ -223,7 +264,7 @@ app.post('/updateTrainer/:email', async (req, res)=>{
       controller.updateTrainer(req, res);
   }
   catch(error){
-      console.error('Error updating equipment:', error);
+      console.error('Error updating trainer:', error);
       res.status(500).json({ error: 'Internal Server Error' });
   }
 });

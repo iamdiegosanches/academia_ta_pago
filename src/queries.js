@@ -12,7 +12,7 @@ const getAllClientes = `
 
 const getClienteByEmail = `
     SELECT * 
-    FROM CLIENTE 
+    FROM cliente 
     WHERE email = $1`;
 
 // Selecionar clientes que treinaram em determinado dia
@@ -48,14 +48,12 @@ const getClientesWorkoutDayAndEquip = `
     WHERE u.data = $1 AND u.id_equip = $2 AND u.email_cliente = c.email
 `;
 
-// chat que fez, tem que ver se ta certo
 const getClientesWorkoutMonthAndEquip = `
     SELECT c.nome, c.email, c.objetivo 
     FROM cliente c, usa u 
     WHERE DATE_PART('month', u.data::timestamp) = DATE_PART('month', $1::timestamp) AND u.id_equip = $2 AND u.email_cliente = c.email
 `;
 
-// chat que fez, tem que ver se ta certo
 const getClientesWorkoutYearAndEquip = `
     SELECT c.nome, c.email, c.objetivo, COUNT(*) as usage_count 
     FROM cliente c, usa u 
@@ -145,7 +143,7 @@ const countTrainersCPF = `
 const updateTrainer = `
     UPDATE treinador 
     SET email = $1, cpf = $2, nome = $3, data = $4, senha = $5, salario = $6 
-    WHERE email = $1
+    WHERE email = $7
 `;
 
 const deleteTrainer = `

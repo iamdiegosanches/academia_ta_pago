@@ -38,11 +38,12 @@
                                 </div>
                             </div>
                         <% } %>
-                    <% } else { %>
-                        <div class="NoData">
-                            <a href="/addEquipment" class="button">Adicionar Equipamento</a>
-                            <p>No equipment data available.</p>
-                        </div>
+                    <% } %>
+                </div>
+                <div class="NoData">
+                    <a href="/addEquipment" class="button">Adicionar Equipamento</a>
+                    <% if (!equipments) { %>
+                        <p>No equipment data available.</p>   
                     <% } %>
                 </div>
             </div>
@@ -78,12 +79,13 @@
                                 </div>
                             </div>
                             <% } %>
-                                <% } else { %>
-                                    <div class="NoData">
-                                        <a href="/addTrainer" class="button">Adicionar Treinador</a>
-                                        <p>No trainer data available.</p>    
-                                    </div>
-                                <% } %>
+                        <% } %>
+                </div>
+                <div class="NoData">
+                    <a href="/addTrainer" class="button">Adicionar Treinador</a>
+                    <% if (!trainers) { %>
+                        <p>No trainer data available.</p>   
+                    <% } %>
                 </div>
             </div>
 

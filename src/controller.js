@@ -220,7 +220,6 @@ const getEquipmentById = async (req, res) => {
 const qtdEquipments = async () => {
     try {
         const results = await pool.query(queries.countEquipments);
-        console.log("Resultado: ", results);
         return results.rows;
     } catch (error) {
         console.log(error);

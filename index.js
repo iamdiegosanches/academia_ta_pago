@@ -354,6 +354,52 @@ app.post('/registrarUso/:id', (req, res) => {
   }
 });
 
+app.get('/clientDashboard/:email', async (req, res) => {
+  try {
+    const isClient = await controller.getClientByEmail(req.params.email);
+    if (isClient){
+        const email = req.params.email;
+        const dataDB = await controller.getEquipmentsUsedToday(email, new Date());
+        res.render('clientDashboard', {equipment: dataDB, email: email} );
+      } else {
+        res.status(500).send("Client not exists");
+    }
+} catch (error) {
+    console.log(error);
+    res.status(500).send("Internal Server Error");
+}
+});
+
+app.get('/clientDashboard/:email/:filter', async (req, res) => {
+  try {
+    const isClient = await controller.getClientByEmail(req.params.email);
+    console.log("É cliente?", isClient);
+    if (isClient) {
+      const email = req.params.email;
+      let data;
+
+      switch (req.params.filter) {
+          case 'today':
+              data = await controller.getEquipmentsUsedToday(email, new Date());
+              break;
+          case 'month':
+              data = await controller.getEquipmentUsedMonth(email, new Date());
+              break;
+          case 'mostUsed':
+              data = await controller.getEquipmentMostUsed(email, new Date());
+              break;
+      }
+
+      res.render('card_data', {data: data });
+    } else {
+      res.status(500).send("Client not exists");
+    }
+  }catch (error) {
+    console.log(error);
+  }
+});
+
+
 // Inicia o servidor
 app.listen(PORT, () => {
   console.log(`Servidor iniciado em http://localhost:${PORT}`);

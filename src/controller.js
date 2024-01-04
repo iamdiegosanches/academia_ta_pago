@@ -3,6 +3,7 @@ const { pool } = require('../dbConfig');
 const queries = require('./queries');
 const jwtSecret = process.env.JWT_SECRET;
 const jwt = require('jsonwebtoken');
+const { error } = require('console');
 
 const getAllClients = async () => {
     return new Promise((resolve, reject) => {
@@ -399,6 +400,32 @@ const registrarUso = async (req, res) => {
 };
 
 
+const getEquipmentsUsedToday = async (email, data) => {
+    try {
+        const results = await pool.query(queries.getEquipmentsUsedToday, [email, data]);
+        return results.rows;
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+const getEquipmentUsedMonth = async (email, data) => {
+    try {
+        const results = await pool.query(queries.getEquipmentUsedMonth, [email, data]);
+        return results.rows;
+    } catch (error) {
+        console.log(error);
+    }
+};
+
+const getEquipmentMostUsed = async (email, data) => {
+    try {
+        const results = await pool.query(queries.getEquipmentMostUsed, [email, data]);
+        return results.rows;
+    } catch (error) {
+        console.log(error);
+    }
+};
 module.exports = {
     getAllClients,
     getClientByEmail,
@@ -426,4 +453,7 @@ module.exports = {
     qtdTrainers,
     countEquipByTrainer,
     registrarUso,
+    getEquipmentsUsedToday,
+    getEquipmentUsedMonth,
+    getEquipmentMostUsed,
 };

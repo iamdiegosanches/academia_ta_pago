@@ -96,6 +96,27 @@ const updateWeight = `
     WHERE email = $2;
 `;
 
+const getEquipmentsUsedToday = `
+    SELECT u.peso, u.repeticao, e.nome, t.nome as nome_treinador
+    FROM usa u, equipamento e, treinador t
+    WHERE u.email_cliente = $1 AND e.id = u.id_equip AND u.data = $2 AND t.email = e.email_treinador
+`;
+
+const getEquipmentUsedMonth = `
+    SELECT u.peso, u.repeticao, e.nome, t.nome as nome_treinador
+    FROM usa u, equipamento e, treinador t
+    WHERE u.email_cliente = $1 AND e.id = u.id_equip AND DATE_PART('month', u.data::timestamp) = DATE_PART('month', $2::timestamp) AND t.email = e.email_treinador
+`;
+
+const getEquipmentMostUsed = `
+    SELECT u.peso, u.repeticao, e.nome, t.nome as nome_treinador, COUNT(*) as equip_count
+    FROM usa u, equipamento e, treinador t
+    WHERE u.email_cliente = $1 AND e.id = u.id_equip AND DATE_PART('year', u.data::timestamp) = DATE_PART('year', $2::timestamp) AND t.email = e.email_treinador
+    GROUP BY u.peso, u.repeticao, e.nome, t.nome
+    ORDER BY equip_count DESC
+    LIMIT 3
+    `;
+
 // -> Treinador
 const addTreinador = `
     INSERT INTO treinador (email, cpf, nome, data, senha, salario) 
@@ -215,7 +236,7 @@ const countEquipments = `
     FROM equipamento e
 `;
 
-// conta os
+// Retorna a quantidade de equipamentos que o treinador (x) cuida
 const countEquipByTrainer = `
     SELECT COUNT(e.id) 
     FROM equipamento e 
@@ -265,4 +286,7 @@ module.exports = {
     getSenhaByEmail,
     countEquipByTrainer,
     registerUse,
+    getEquipmentsUsedToday,
+    getEquipmentUsedMonth,
+    getEquipmentMostUsed,
 };

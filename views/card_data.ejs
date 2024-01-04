@@ -1,0 +1,17 @@
+<% if (data && data.length > 0) { %>
+    <% for (let i = 0; i < data.length; i++) { %>
+        <div class="card-equip">
+            <p><strong>Nome:</strong> <%= data[i].nome %></p>
+            <p><strong>Treinador:</strong> <%= data[i].nome_treinador %></p>
+            <p><strong>Peso:</strong> <%= data[i].peso %></p>
+            <p><strong>Repeticao:</strong> <%= data[i].repeticao %></p>
+            <% if (data[i].equip_count) { %>
+                <p><strong>Quantidade de vezes: </strong><%= data[i].equip_count %></p>
+            <% } %>
+        </div>
+    <% } %>
+<% } else { %>
+    <div class="card-equip">
+        <p>No Data available.</p>   
+    </div>
+<% } %>

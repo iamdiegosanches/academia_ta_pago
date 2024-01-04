@@ -3,7 +3,7 @@
 // -> Cliente
 const addClient = `
     INSERT INTO cliente 
-    (zz, email, cpf, data, senha, objetivo) 
+    (nome, email, cpf, data, senha, objetivo) 
     VALUES ($1, $2, $3, $4, $5, $6)`;
 
 const getAllClientes = `

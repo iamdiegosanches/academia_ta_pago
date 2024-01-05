@@ -134,20 +134,27 @@ const getTotalWeightForSpecificMonth = async (email, data) => {
     }
 };
 
-const updateWeight = (req, res) => {
-    const {email, weigth} = req.body; // Recebe o email logado e o peso da solicitação
-    pool.query(queries.getClienteByEmail, [email], (error, results) => {
-        if (error) throw error;
-        const noClientFound = !results.rows.length;
-        if (noClientFound){
-            res.send("Cliente inexistente.");
-        } else {
-            pool.query(queries.updateClient, [email, weigth], (error, results) => {
-                if (error) throw error;
-                res.status(200).send("Peso atualizado com sucesso.");
-            });
+const updateWeight = async (req, res) => {
+    try {
+        const email = await getTokenEmailID(req);
+
+        const clientResult = await pool.query(queries.getClienteByEmail, [email]);
+
+        if (clientResult.rows.length === 0) {
+            return res.status(404).send("Cliente inexistente.");
         }
-    });
+
+        const { nObjetivo } = req.body;
+        const parsedObjetivo = parseFloat(nObjetivo);
+        if (isNaN(parsedObjetivo)) {
+            return res.status(400).send("Invalid nObjetivo.");
+        }
+        
+        await pool.query(queries.updateWeight, [parsedObjetivo, email]);
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Erro interno do servidor');
+    }
 };
 
 const getAllEquipments = async (req, res) => {

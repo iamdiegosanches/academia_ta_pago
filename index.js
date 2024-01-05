@@ -37,9 +37,11 @@ app.get('/create-user', (req, res) => {
   }
 });
 
-app.get('/edit-weight', (req, res) => {
+app.get('/edit-weight', async (req, res) => {
   try {
-    res.render('edit_weight');
+    const email = controller.getTokenEmailID(req);
+    const isClient = await controller.getClientByEmail(email);
+    res.render('edit_weight', { client: isClient });
   } catch (error) {
     console.error('Ocorreu um erro inesperado:', error);
     res.status(500).send('Erro interno do servidor');
@@ -47,9 +49,10 @@ app.get('/edit-weight', (req, res) => {
 });
 
 // ToDo: testar essa funcionalidade
-app.post('/edit-weight', (req, res) => {
+app.post('/edit-weight', authMiddleware(['client']), async (req, res) => {
   try {
     controller.updateWeight(req, res);
+    res.redirect('/clientDashboard');
   } catch (error) {
     res.status(500).json({ error: 'Erro interno do servidor', details: error.message });
   }
@@ -279,8 +282,8 @@ app.get('/deleteTrainer/:email', async (req, res)=>{
 
 app.get('/trainerDashboard', async (req, res) => {
   try {
-      email = controller.getTokenEmailID(req);
-      isTrainer = controller.getTrainerByEmail(email);
+      const email = controller.getTokenEmailID(req);
+      const isTrainer = controller.getTrainerByEmail(email);
       if (isTrainer){
           const equip = await controller.getEquipmentByPersonal(req, res);
           if (equip.length == 0) {
@@ -302,7 +305,7 @@ app.get('/trainerDashboard', async (req, res) => {
 
 app.get('/trainerDashboard/:filter', async (req, res) => {
   try {
-      email = controller.getTokenEmailID(req);
+      const email = controller.getTokenEmailID(req);
       const isTrainer = await controller.getTrainerByEmail(email);
       if (isTrainer) {
           const equip = await controller.getEquipmentByPersonal(req, res);
@@ -356,7 +359,7 @@ app.post('/registrarUso/:id', (req, res) => {
 
 app.get('/clientDashboard', async (req, res) => {
   try {
-    email = controller.getTokenEmailID(req);
+    const email = controller.getTokenEmailID(req);
     const isClient = await controller.getClientByEmail(email);
     if (isClient){
         const dataDB = await controller.getEquipmentsUsedToday(email, new Date());
@@ -373,7 +376,7 @@ app.get('/clientDashboard', async (req, res) => {
 
 app.get('/clientDashboard/:filter', async (req, res) => {
   try {
-    email = controller.getTokenEmailID(req);
+    const email = controller.getTokenEmailID(req);
     const isClient = await controller.getClientByEmail(email);
     if (isClient) {
       let data;

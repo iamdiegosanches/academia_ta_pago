@@ -371,13 +371,12 @@ app.get('/clientDashboard', async (req, res) => {
 }
 });
 
-app.get('/clientDashboard/:email/:filter', async (req, res) => {
+app.get('/clientDashboard/:filter', async (req, res) => {
   try {
-    const isClient = await controller.getClientByEmail(req.params.email);
+    email = controller.getTokenEmailID(req);
+    const isClient = await controller.getClientByEmail(email);
     if (isClient) {
-      const email = req.params.email;
       let data;
-
       switch (req.params.filter) {
           case 'today':
               data = await controller.getEquipmentsUsedToday(email, new Date());
@@ -389,7 +388,6 @@ app.get('/clientDashboard/:email/:filter', async (req, res) => {
               data = await controller.getEquipmentMostUsed(email, new Date());
               break;
       }
-
       res.render('card_data', {data: data });
     } else {
       res.status(500).send("Client not exists");
@@ -397,6 +395,11 @@ app.get('/clientDashboard/:email/:filter', async (req, res) => {
   }catch (error) {
     console.log(error);
   }
+});
+
+app.get('/logout', (req, res) => {
+  res.clearCookie('token');
+  res.redirect('/');
 });
 
 // Inicia o servidor

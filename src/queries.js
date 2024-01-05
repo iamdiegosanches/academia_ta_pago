@@ -3,7 +3,7 @@
 // -> Cliente
 const addClient = `
     INSERT INTO cliente 
-    (zz, email, cpf, data, senha, objetivo) 
+    (nome, email, cpf, data, senha, objetivo) 
     VALUES ($1, $2, $3, $4, $5, $6)`;
 
 const getAllClientes = `
@@ -12,7 +12,7 @@ const getAllClientes = `
 
 const getClienteByEmail = `
     SELECT * 
-    FROM CLIENTE 
+    FROM cliente 
     WHERE email = $1`;
 
 // Selecionar clientes que treinaram em determinado dia
@@ -48,14 +48,12 @@ const getClientesWorkoutDayAndEquip = `
     WHERE u.data = $1 AND u.id_equip = $2 AND u.email_cliente = c.email
 `;
 
-// chat que fez, tem que ver se ta certo
 const getClientesWorkoutMonthAndEquip = `
     SELECT c.nome, c.email, c.objetivo 
     FROM cliente c, usa u 
     WHERE DATE_PART('month', u.data::timestamp) = DATE_PART('month', $1::timestamp) AND u.id_equip = $2 AND u.email_cliente = c.email
 `;
 
-// chat que fez, tem que ver se ta certo
 const getClientesWorkoutYearAndEquip = `
     SELECT c.nome, c.email, c.objetivo, COUNT(*) as usage_count 
     FROM cliente c, usa u 
@@ -81,7 +79,7 @@ const countClients = `
     FROM cliente c
 `;
 
-// Peso total levantado no mes
+// Peso total levantado em cada mes
 const getTotalWeight = `
     SELECT
         TO_CHAR(data, 'YYYY/MM') AS month_year,
@@ -92,11 +90,47 @@ const getTotalWeight = `
     ORDER BY month_year DESC;
 `;
 
+// Peso total levantado no mes (x)
+const getTotalWeightForSpecificMonth = `
+    SELECT
+    DATE_PART('year', data) AS year,
+    DATE_PART('month', data) AS month,
+    SUM(peso * repeticao) AS total_peso
+    FROM USA
+    WHERE email_cliente = $1
+    AND DATE_PART('year', data::timestamp) = DATE_PART('year', $2::timestamp)
+    AND DATE_PART('month', data::timestamp) = DATE_PART('month', $2::timestamp)
+    GROUP BY year, month
+    ORDER BY year DESC, month DESC;
+`;
+
+
 const updateWeight = `
     UPDATE CLIENTE
     SET objetivo = $1
     WHERE email = $2;
 `;
+
+const getEquipmentsUsedToday = `
+    SELECT u.peso, u.repeticao, e.nome, t.nome as nome_treinador
+    FROM usa u, equipamento e, treinador t
+    WHERE u.email_cliente = $1 AND e.id = u.id_equip AND u.data = $2 AND t.email = e.email_treinador
+`;
+
+const getEquipmentUsedMonth = `
+    SELECT u.peso, u.repeticao, e.nome, t.nome as nome_treinador
+    FROM usa u, equipamento e, treinador t
+    WHERE u.email_cliente = $1 AND e.id = u.id_equip AND DATE_PART('month', u.data::timestamp) = DATE_PART('month', $2::timestamp) AND t.email = e.email_treinador
+`;
+
+const getEquipmentMostUsed = `
+    SELECT u.peso, u.repeticao, e.nome, t.nome as nome_treinador, COUNT(*) as equip_count
+    FROM usa u, equipamento e, treinador t
+    WHERE u.email_cliente = $1 AND e.id = u.id_equip AND DATE_PART('year', u.data::timestamp) = DATE_PART('year', $2::timestamp) AND t.email = e.email_treinador
+    GROUP BY u.peso, u.repeticao, e.nome, t.nome
+    ORDER BY equip_count DESC
+    LIMIT 1
+    `;
 
 // -> Treinador
 const addTreinador = `
@@ -145,7 +179,7 @@ const countTrainersCPF = `
 const updateTrainer = `
     UPDATE treinador 
     SET email = $1, cpf = $2, nome = $3, data = $4, senha = $5, salario = $6 
-    WHERE email = $1
+    WHERE email = $7
 `;
 
 const deleteTrainer = `
@@ -217,7 +251,7 @@ const countEquipments = `
     FROM equipamento e
 `;
 
-// conta os
+// Retorna a quantidade de equipamentos que o treinador (x) cuida
 const countEquipByTrainer = `
     SELECT COUNT(e.id) 
     FROM equipamento e 
@@ -267,4 +301,8 @@ module.exports = {
     getSenhaByEmail,
     countEquipByTrainer,
     registerUse,
+    getEquipmentsUsedToday,
+    getEquipmentUsedMonth,
+    getEquipmentMostUsed,
+    getTotalWeightForSpecificMonth,
 };

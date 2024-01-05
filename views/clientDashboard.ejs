@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/public/css/style_trainerDash.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <title>Dashboard</title>
+</head>
+<body>
+    
+    <div class="dashboard">
+        <div class="content">
+
+            <div class="box">
+                <h2> Bem vindo(a) <%= client.nome %></h2>
+                <div class="card">
+                    <div class="caracteristicas">
+                        <p><strong>Objetivo: </strong><%= client.objetivo %>Kg</p>
+                        <p><strong>Peso total nesse mes: </strong><%= wight[0].total_peso %>    Kg</p>
+                        <a href="" class="button"></a>
+                    </div>
+                </div>
+                <div class="title">                    
+                    <h3>Equipamentos usados</h3>
+                </div>
+                <div class="filter">
+                    <select id="filter">
+                        <option value="today">Hoje</option>
+                        <option value="month">Mes</option>
+                        <option value="mostUsed">Mais Usado Este Ano</option>
+                    </select>
+                    <button id="applyFilter">Aplicar Filtro</button>    
+                </div>
+                <div class="card">
+                    <div class="list-equip" id="data">
+                        <% if (equipment && equipment.length > 0) { %>
+                            <% for (let i = 0; i < equipment.length; i++) { %>
+                                <div class="card-equip">
+                                    <p><strong>Nome:</strong> <%= equipment[i].nome %></p>
+                                    <p><strong>Treinador(a):</strong> <%= equipment[i].nome_treinador %></p>
+                                    <p><strong>Peso:</strong> <%= equipment[i].peso %></p>
+                                    <p><strong>Repeticao:</strong> <%= equipment[i].repeticao %></p>
+                                </div>
+                            <% } %>
+                        <% } else { %>
+                            <div class="alert card-equip">
+                                <p>No Equipment data available.</p>
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    
+<script>
+$(document).ready(function(){
+    $('#applyFilter').click(function(){
+        var filter = $('#filter').val();
+        console.log(filter);
+        
+        <% if (equipment && equipment.length > 0) { %>
+            $.ajax({
+                url: '/clientDashboard/<%= email %>/' + filter,
+                type: 'GET',
+                success: function(data){
+                    $('#data').html(data);
+                }
+            });
+        <% } else { %>
+            console.log('No equipment used.');
+        <% } %>
+    });
+});
+
+</script>
+
+</body>
+</html> 

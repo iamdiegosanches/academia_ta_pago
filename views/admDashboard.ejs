@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Criar cliente</title>
+    <title>Dashboaard</title>
     <link rel="stylesheet" href="/public/css/style_admDashboard.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 </head>
@@ -38,11 +38,12 @@
                                 </div>
                             </div>
                         <% } %>
-                    <% } else { %>
-                        <div class="NoData">
-                            <a href="/addEquipment" class="button">Adicionar Equipamento</a>
-                            <p>No equipment data available.</p>
-                        </div>
+                    <% } %>
+                </div>
+                <div class="NoData">
+                    <a href="/addEquipment" class="button">Adicionar Equipamento</a>
+                    <% if (!equipments) { %>
+                        <p>No equipment data available.</p>   
                     <% } %>
                 </div>
             </div>
@@ -69,21 +70,22 @@
                                 </p>
                                 
                                 <div class="buttons">
-                                    <a href="/deleteTrainer/<%= trainers[i].email %>">
-                                        <button class="btn btn-danger m-1"><i class="material-icons">delete</i></button>        
-                                    </a>
+                                    <button class="btn btn-danger m-1" onclick="confirmDelete('<%= trainers[i].email %>')">
+                                        <i class="material-icons">delete</i>
+                                    </button>
                                     <a href="/updateTrainer/<%= trainers[i].email %>">
                                         <button class="btn btn-primary m-1"><i class="material-icons">border_color</i></button>
                                     </a>
                                 </div>
                             </div>
                             <% } %>
-                                <% } else { %>
-                                    <div class="NoData">
-                                        <a href="/addTrainer" class="button">Adicionar Treinador</a>
-                                        <p>No trainer data available.</p>    
-                                    </div>
-                                <% } %>
+                        <% } %>
+                </div>
+                <div class="NoData">
+                    <a href="/addTrainer" class="button">Adicionar Treinador</a>
+                    <% if (!trainers) { %>
+                        <p>No trainer data available.</p>   
+                    <% } %>
                 </div>
             </div>
 
@@ -173,6 +175,13 @@
             }
             carousel.style.transform = `translateX(-${currentSlide * 100}%)`;
         });
+
+        function confirmDelete(email) {
+            const isConfirmed = confirm("Tem certeza que deseja excluir o treinador?");
+            if (isConfirmed) {
+                window.location.href = `/deleteTrainer/${email}`;
+            }
+        };
     </script>
 
 </body>

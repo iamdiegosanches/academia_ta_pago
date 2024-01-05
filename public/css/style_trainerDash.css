@@ -36,7 +36,7 @@ h1, h2, h3, h4 {
 
 .list {
     flex-direction: column;
-    height: 300px;
+    height: 270px;
     overflow: auto;
     scroll-snap-type: y mandatory;
 }
@@ -83,7 +83,7 @@ select {
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
-    padding-bottom: 20px;
+    padding-bottom: 10px;
 }
 
 .filter select {
@@ -132,4 +132,38 @@ button:hover {
 
 button a:hover {
     color: #F8F10D;
+}
+
+.list-equip {
+    flex-direction: column;
+    height: 180px;
+    overflow: auto;
+    scroll-snap-type: y mandatory;
+}
+
+
+.list-equip::-webkit-scrollbar {
+    width: 10px;
+}
+
+.list-equip::-webkit-scrollbar-thumb {
+    background-color: #888;
+    border-radius: 5px;
+}
+
+.list-equip::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
+    border-radius: 5px;
+}
+
+.caracteristicas {
+    padding-left: 20px;
+}
+
+.caracteristicas p strong {
+    color: #F8F10D;
+}
+
+.title {
+    padding-top: 20px;
 }

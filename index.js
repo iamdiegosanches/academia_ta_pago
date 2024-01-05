@@ -84,6 +84,7 @@ app.post('/', async (req, res) => {
   const { email, password } = req.body;
   try {
     const client = await controller.getClientByEmail(email);
+    const adm_user = process.env.DB_USER;
     if (!client) {
       const trainer = await controller.getTrainerByEmail(email)
       if(!trainer) {
@@ -92,10 +93,18 @@ app.post('/', async (req, res) => {
         if (password === trainer.senha) {
           const token = jwt.sign({ userId: email, role: 'trainer' }, jwtSecret);
           res.cookie('token', token, { httpOnly: true });
-          res.redirect('/admDashboard'); // Alterar para a dashboard do personal
+          res.redirect(`/trainerDashboard/${email}`); 
         } else {
           return res.status(500).send('Senha invalida'); // ToDo: melhorar tratamento para a falha de senha
         }
+      }
+      // ToDo: Tem que testar
+    } else if (adm_user === email) {
+      const adm_password = process.env.DB_PASSWORD;
+      if (password === adm_password) {
+        const token = jwt.sign({ userId: email, role: 'adm' }, jwtSecret);
+        res.cookie('token', token, { httpOnly: true });
+        res.redirect('/admDashboard');
       }
     } else {
       if (password === client.senha) { // ToDo: criptografia
@@ -167,8 +176,6 @@ app.get('/admDashboard', async (req, res) => {
         };
       });
 
-      console.log(qtdEquip);
-
       const [equipments, trainers] = await Promise.all([equipmentsPromise, trainersPromise]);
 
       const simplifiedTrainer = trainers.map(trainers => {
@@ -189,6 +196,47 @@ app.get('/admDashboard', async (req, res) => {
   }
 });
 
+app.get('/addClient', (req, res) => {
+  res.render('add_client');
+});
+
+app.post('/addClient', (req, res) => {
+  try {
+      controller.addClient(req, res);
+  } catch (error) {
+      console.log('Error in adding Client');
+      console.log(error);
+  }
+});
+
+app.get('/updateClient/:email', async (req, res)=>{
+  try {
+    const data = await controller.getClientByEmail(req.params.email);
+    res.render('edit_client', {client: data});
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+app.post('/updateClient/:email', async (req, res)=>{
+  try{
+      controller.updateClient(req, res);
+  }
+  catch(error){
+      console.error('Error updating client:', error);
+      res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.get('/deleteClient/:email', async (req, res)=>{
+  try {
+      // Queria fazer uma parte para enviar uma mensagem para o adm confirmar se quer mesmo excluir
+      controller.removeClient(req, res);
+  } catch (error) {
+      console.log(error);
+  }
+});
+
 app.get('/addTrainer', (req, res) => {
   res.render('add_trainer');
 });
@@ -203,8 +251,12 @@ app.post('/addTrainer', (req, res) => {
 });
 
 app.get('/updateTrainer/:email', async (req, res)=>{
-  const data = await controller.getTrainerByEmail(req, res);
-  res.render('edit_trainer', {trainer: data});
+  try {
+    const data = await controller.getTrainerByEmail(req.params.email);
+    res.render('edit_trainer', {trainer: data});
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 app.post('/updateTrainer/:email', async (req, res)=>{
@@ -212,7 +264,7 @@ app.post('/updateTrainer/:email', async (req, res)=>{
       controller.updateTrainer(req, res);
   }
   catch(error){
-      console.error('Error updating equipment:', error);
+      console.error('Error updating trainer:', error);
       res.status(500).json({ error: 'Internal Server Error' });
   }
 });
@@ -229,15 +281,14 @@ app.get('/deleteTrainer/:email', async (req, res)=>{
 
 app.get('/trainerDashboard/:email', async (req, res) => {
   try {
-      const isTrainer = await controller.getTrainerByEmail(req, res);
-      if (isTrainer.length){
+      const isTrainer = await controller.getTrainerByEmail(req.params.email);
+      if (isTrainer){
           const equip = await controller.getEquipmentByPersonal(req, res);
           if (equip.length == 0) {
               const clientsUseEquip = [];
               res.render('trainerDashboard', { equip: equip, clients: clientsUseEquip });
           } else {
               const data = new Date();
-              console.log(equip)
               const clientsUseEquip = await controller.getClientsUseEquip(req, res, equip[0].id, data);
               res.render('trainerDashboard', { equip: equip, clients: clientsUseEquip });
           }
@@ -252,8 +303,8 @@ app.get('/trainerDashboard/:email', async (req, res) => {
 
 app.get('/trainerDashboard/:email/:filter', async (req, res) => {
   try {
-      const isTrainer = await controller.getTrainerByEmail(req, res);
-      if (isTrainer.length) {
+      const isTrainer = await controller.getTrainerByEmail(req.params.email);
+      if (isTrainer) {
           const equip = await controller.getEquipmentByPersonal(req, res);
           let data;
 
@@ -302,6 +353,52 @@ app.post('/registrarUso/:id', (req, res) => {
       console.log(error);
   }
 });
+
+app.get('/clientDashboard/:email', async (req, res) => {
+  try {
+    const isClient = await controller.getClientByEmail(req.params.email);
+    if (isClient){
+        const email = req.params.email;
+        const dataDB = await controller.getEquipmentsUsedToday(email, new Date());
+        const total_weight = await controller.getTotalWeightForSpecificMonth(email, new Date());
+        res.render('clientDashboard', {equipment: dataDB, email: email, client: isClient, wight: total_weight } );
+      } else {
+        res.status(500).send("Client not exists");
+    }
+} catch (error) {
+    console.log(error);
+    res.status(500).send("Internal Server Error");
+}
+});
+
+app.get('/clientDashboard/:email/:filter', async (req, res) => {
+  try {
+    const isClient = await controller.getClientByEmail(req.params.email);
+    if (isClient) {
+      const email = req.params.email;
+      let data;
+
+      switch (req.params.filter) {
+          case 'today':
+              data = await controller.getEquipmentsUsedToday(email, new Date());
+              break;
+          case 'month':
+              data = await controller.getEquipmentUsedMonth(email, new Date());
+              break;
+          case 'mostUsed':
+              data = await controller.getEquipmentMostUsed(email, new Date());
+              break;
+      }
+
+      res.render('card_data', {data: data });
+    } else {
+      res.status(500).send("Client not exists");
+    }
+  }catch (error) {
+    console.log(error);
+  }
+});
+
 
 // Inicia o servidor
 app.listen(PORT, () => {

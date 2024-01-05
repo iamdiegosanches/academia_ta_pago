@@ -16,8 +16,8 @@
                 <h2> Bem vindo(a) <%= client.nome %></h2>
                 <div class="card">
                     <div class="caracteristicas">
-                        <p><strong>Objetivo: </strong><%= client.objetivo %>Kg</p>
-                        <p><strong>Peso total nesse mes: </strong><%= wight[0].total_peso %>    Kg</p>
+                        <p><strong>Objetivo: </strong><%= client.objetivo %> Kg</p>
+                        <p><strong>Peso total nesse mes: </strong><%= wight[0].total_peso %> Kg</p>
                         <a href="" class="button"></a>
                     </div>
                 </div>
@@ -44,7 +44,7 @@
                                 </div>
                             <% } %>
                         <% } else { %>
-                            <div class="alert card-equip">
+                            <div class="card-equip">
                                 <p>No Equipment data available.</p>
                             </div>
                         <% } %>
@@ -57,12 +57,10 @@
 
     
 <script>
-$(document).ready(function(){
-    $('#applyFilter').click(function(){
-        var filter = $('#filter').val();
-        console.log(filter);
-        
-        <% if (equipment && equipment.length > 0) { %>
+    $(document).ready(function(){
+        $('#applyFilter').click(function(){
+            var filter = $('#filter').val();
+            console.log(filter);
             $.ajax({
                 url: '/clientDashboard/<%= email %>/' + filter,
                 type: 'GET',
@@ -70,11 +68,8 @@ $(document).ready(function(){
                     $('#data').html(data);
                 }
             });
-        <% } else { %>
-            console.log('No equipment used.');
-        <% } %>
+        });
     });
-});
 
 </script>
 

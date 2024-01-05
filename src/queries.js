@@ -79,7 +79,7 @@ const countClients = `
     FROM cliente c
 `;
 
-// Peso total levantado no mes
+// Peso total levantado em cada mes
 const getTotalWeight = `
     SELECT
         TO_CHAR(data, 'YYYY/MM') AS month_year,
@@ -89,6 +89,21 @@ const getTotalWeight = `
     GROUP BY month_year
     ORDER BY month_year DESC;
 `;
+
+// Peso total levantado no mes (x)
+const getTotalWeightForSpecificMonth = `
+    SELECT
+    DATE_PART('year', data) AS year,
+    DATE_PART('month', data) AS month,
+    SUM(peso * repeticao) AS total_peso
+    FROM USA
+    WHERE email_cliente = $1
+    AND DATE_PART('year', data::timestamp) = DATE_PART('year', $2::timestamp)
+    AND DATE_PART('month', data::timestamp) = DATE_PART('month', $2::timestamp)
+    GROUP BY year, month
+    ORDER BY year DESC, month DESC;
+`;
+
 
 const updateWeight = `
     UPDATE CLIENTE
@@ -114,7 +129,7 @@ const getEquipmentMostUsed = `
     WHERE u.email_cliente = $1 AND e.id = u.id_equip AND DATE_PART('year', u.data::timestamp) = DATE_PART('year', $2::timestamp) AND t.email = e.email_treinador
     GROUP BY u.peso, u.repeticao, e.nome, t.nome
     ORDER BY equip_count DESC
-    LIMIT 3
+    LIMIT 1
     `;
 
 // -> Treinador
@@ -289,4 +304,5 @@ module.exports = {
     getEquipmentsUsedToday,
     getEquipmentUsedMonth,
     getEquipmentMostUsed,
+    getTotalWeightForSpecificMonth,
 };

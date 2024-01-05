@@ -360,7 +360,8 @@ app.get('/clientDashboard/:email', async (req, res) => {
     if (isClient){
         const email = req.params.email;
         const dataDB = await controller.getEquipmentsUsedToday(email, new Date());
-        res.render('clientDashboard', {equipment: dataDB, email: email} );
+        const total_weight = await controller.getTotalWeightForSpecificMonth(email, new Date());
+        res.render('clientDashboard', {equipment: dataDB, email: email, client: isClient, wight: total_weight } );
       } else {
         res.status(500).send("Client not exists");
     }
@@ -373,7 +374,6 @@ app.get('/clientDashboard/:email', async (req, res) => {
 app.get('/clientDashboard/:email/:filter', async (req, res) => {
   try {
     const isClient = await controller.getClientByEmail(req.params.email);
-    console.log("É cliente?", isClient);
     if (isClient) {
       const email = req.params.email;
       let data;

@@ -426,6 +426,16 @@ const getEquipmentMostUsed = async (email, data) => {
         console.log(error);
     }
 };
+
+const getTotalWeightForSpecificMonth = async (email, data) => {
+    try {
+        const result = await pool.query(queries.getTotalWeightForSpecificMonth, [email, data]);
+        return result.rows;
+    } catch (error) {
+        console.log(error);
+    }
+};
+
 module.exports = {
     getAllClients,
     getClientByEmail,
@@ -456,4 +466,5 @@ module.exports = {
     getEquipmentsUsedToday,
     getEquipmentUsedMonth,
     getEquipmentMostUsed,
+    getTotalWeightForSpecificMonth,
 };

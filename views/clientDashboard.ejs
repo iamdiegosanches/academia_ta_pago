@@ -13,7 +13,17 @@
         <div class="content">
 
             <div class="box">
-                <h2>Equipamento Usado</h2>
+                <h2> Bem vindo(a) <%= client.nome %></h2>
+                <div class="card">
+                    <div class="caracteristicas">
+                        <p><strong>Objetivo: </strong><%= client.objetivo %>Kg</p>
+                        <p><strong>Peso total nesse mes: </strong><%= wight[0].total_peso %>    Kg</p>
+                        <a href="" class="button"></a>
+                    </div>
+                </div>
+                <div class="title">                    
+                    <h3>Equipamentos usados</h3>
+                </div>
                 <div class="filter">
                     <select id="filter">
                         <option value="today">Hoje</option>
@@ -23,18 +33,18 @@
                     <button id="applyFilter">Aplicar Filtro</button>    
                 </div>
                 <div class="card">
-                    <div class="list" id="data">
+                    <div class="list-equip" id="data">
                         <% if (equipment && equipment.length > 0) { %>
                             <% for (let i = 0; i < equipment.length; i++) { %>
                                 <div class="card-equip">
                                     <p><strong>Nome:</strong> <%= equipment[i].nome %></p>
-                                    <p><strong>Treinador:</strong> <%= equipment[i].nome_treinador %></p>
+                                    <p><strong>Treinador(a):</strong> <%= equipment[i].nome_treinador %></p>
                                     <p><strong>Peso:</strong> <%= equipment[i].peso %></p>
                                     <p><strong>Repeticao:</strong> <%= equipment[i].repeticao %></p>
                                 </div>
                             <% } %>
                         <% } else { %>
-                            <div class="card-equip">
+                            <div class="alert card-equip">
                                 <p>No Equipment data available.</p>
                             </div>
                         <% } %>

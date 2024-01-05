@@ -93,7 +93,7 @@ app.post('/', async (req, res) => {
         if (password === trainer.senha) {
           const token = jwt.sign({ userId: email, role: 'trainer' }, jwtSecret);
           res.cookie('token', token, { httpOnly: true });
-          res.redirect(`/trainerDashboard/${email}`); 
+          res.redirect(`/trainerDashboard`); 
         } else {
           return res.status(500).send('Senha invalida'); // ToDo: melhorar tratamento para a falha de senha
         }
@@ -130,7 +130,6 @@ app.get('/addEquipment', async (req, res) => {
   }
 });
 
-
 app.get('/updateEquipment/:id', async (req, res)=>{
   const data = await controller.getEquipmentById(req, res);
   const trainers = await controller.getAllTrainers(req, res);
@@ -154,7 +153,6 @@ app.get('/deleteEquipment/:id', async (req, res)=>{
       console.log(error);
   }
 }); 
-
 
 app.get('/admDashboard', async (req, res) => {
   try {
@@ -279,9 +277,10 @@ app.get('/deleteTrainer/:email', async (req, res)=>{
   }
 });
 
-app.get('/trainerDashboard/:email', async (req, res) => {
+app.get('/trainerDashboard', async (req, res) => {
   try {
-      const isTrainer = await controller.getTrainerByEmail(req.params.email);
+      email = controller.getTokenEmailID(req);
+      isTrainer = controller.getTrainerByEmail(email);
       if (isTrainer){
           const equip = await controller.getEquipmentByPersonal(req, res);
           if (equip.length == 0) {
@@ -301,9 +300,10 @@ app.get('/trainerDashboard/:email', async (req, res) => {
   }
 });
 
-app.get('/trainerDashboard/:email/:filter', async (req, res) => {
+app.get('/trainerDashboard/:filter', async (req, res) => {
   try {
-      const isTrainer = await controller.getTrainerByEmail(req.params.email);
+      email = controller.getTokenEmailID(req);
+      const isTrainer = await controller.getTrainerByEmail(email);
       if (isTrainer) {
           const equip = await controller.getEquipmentByPersonal(req, res);
           let data;

@@ -82,7 +82,7 @@ $(document).ready(function(){
         
         <% if (equip && equip.length > 0) { %>
             $.ajax({
-                url: '/trainerDashboard/<%= equip[0].email_treinador %>/' + filter,
+                url: '/trainerDashboard/' + filter,
                 type: 'GET',
                 success: function(data){
                     $('#clientData').html(data);

@@ -5,6 +5,15 @@ const jwtSecret = process.env.JWT_SECRET;
 const jwt = require('jsonwebtoken');
 const { error } = require('console');
 
+// ----- controler
+function getTokenEmailID(req) {
+    const token = req.cookies.token;
+    const decodedToken = jwt.verify(token, jwtSecret);
+    const userEmail = decodedToken.userId;
+    return userEmail;
+}
+
+// Relacionado a clientes
 const getAllClients = async () => {
     return new Promise((resolve, reject) => {
         pool.query(queries.getAllClientes, (error, results) => {
@@ -107,10 +116,7 @@ const qtdClients = async () => {
 
 const getTWeight = async (req, res) => {
     try {
-        const token = req.cookies.token;
-        const decodedToken = jwt.verify(token, jwtSecret);
-        const userEmail = decodedToken.userId;
-        
+        userEmail = getTokenEmailID(req);
         const results = await pool.query(queries.getTotalWeight, [userEmail]);
         return results.rows;
     } catch (error) {
@@ -118,6 +124,15 @@ const getTWeight = async (req, res) => {
         res.status(500).send('Erro interno do servidor');
     }
 }
+
+const getTotalWeightForSpecificMonth = async (email, data) => {
+    try {
+        const result = await pool.query(queries.getTotalWeightForSpecificMonth, [email, data]);
+        return result.rows;
+    } catch (error) {
+        console.log(error);
+    }
+};
 
 const updateWeight = (req, res) => {
     const {email, weigth} = req.body; // Recebe o email logado e o peso da solicitação
@@ -427,16 +442,8 @@ const getEquipmentMostUsed = async (email, data) => {
     }
 };
 
-const getTotalWeightForSpecificMonth = async (email, data) => {
-    try {
-        const result = await pool.query(queries.getTotalWeightForSpecificMonth, [email, data]);
-        return result.rows;
-    } catch (error) {
-        console.log(error);
-    }
-};
-
 module.exports = {
+    getTokenEmailID,
     getAllClients,
     getClientByEmail,
     addClient,

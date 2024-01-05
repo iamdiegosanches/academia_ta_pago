@@ -110,7 +110,7 @@ app.post('/', async (req, res) => {
       if (password === client.senha) { // ToDo: criptografia
         const token = jwt.sign({ userId: email, role: 'client' }, jwtSecret);
         res.cookie('token', token, { httpOnly: true });
-        res.redirect('/total-weight'); // ToDo: dashboard do cliente
+        res.redirect(`/clientDashboard`);
       } else {
         return res.status(500).send('Senha invalida'); // ToDo: tratar isso melhor
       }
@@ -354,16 +354,16 @@ app.post('/registrarUso/:id', (req, res) => {
   }
 });
 
-app.get('/clientDashboard/:email', async (req, res) => {
+app.get('/clientDashboard', async (req, res) => {
   try {
-    const isClient = await controller.getClientByEmail(req.params.email);
+    email = controller.getTokenEmailID(req);
+    const isClient = await controller.getClientByEmail(email);
     if (isClient){
-        const email = req.params.email;
         const dataDB = await controller.getEquipmentsUsedToday(email, new Date());
         const total_weight = await controller.getTotalWeightForSpecificMonth(email, new Date());
-        res.render('clientDashboard', {equipment: dataDB, email: email, client: isClient, wight: total_weight } );
+        res.render('clientDashboard', {equipment: dataDB, email: email, client: isClient, weight: total_weight } );
       } else {
-        res.status(500).send("Client not exists");
+        res.status(500).send("O cliente não existe!");
     }
 } catch (error) {
     console.log(error);
@@ -398,7 +398,6 @@ app.get('/clientDashboard/:email/:filter', async (req, res) => {
     console.log(error);
   }
 });
-
 
 // Inicia o servidor
 app.listen(PORT, () => {

@@ -17,7 +17,13 @@
                 <div class="card">
                     <div class="caracteristicas">
                         <p><strong>Objetivo: </strong><%= client.objetivo %> Kg</p>
-                        <p><strong>Peso total nesse mes: </strong><%= wight[0].total_peso %> Kg</p>
+                        <p><strong>Peso total nesse mes: </strong>
+                            <% if (wight && wight.length > 0) { %>
+                                <%= wight[0].total_peso %> Kg
+                            <% } else { %>
+                                <p>Você ainda não realizou nenhum exercício</p>
+                            <% } %>
+                        </p>
                         <button><a href="/total-weight" class="button">Historico de Peso</a></button>
                     </div>
                 </div>

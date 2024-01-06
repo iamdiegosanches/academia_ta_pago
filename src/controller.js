@@ -337,25 +337,36 @@ const addTrainer = async (req, res) => {
 const removeTrainer = async (req, res)  => {
     const email = req.params.email;
 
-    pool.query(queries.getTreinadorByEmail, [email], (error, results) => {
-        if (error) throw error;
-        const noTrainerFound = !results.rows.length;
-        if (noTrainerFound){
-            res.send("Trainer does not exist in the database.");
-        } else {
-            pool.query(queries.deleteTrainer, [email], (error, results) => {
-                if (error) throw error;
-                res.status(200).send("Trainer removed sucessfully.");
-            })
-        }
-    });
+    try {
+        pool.query(queries.getTreinadorByEmail, [email], (error, results) => {
+            if (error) throw error;
+            const noTrainerFound = !results.rows.length;
+            if (noTrainerFound){
+                res.send("Trainer does not exist in the database.");
+            } else {
+                pool.query(queries.getEquipmentByPersonal, [email], (error, result) => {
+                    if (result.rowCount) {
+                        res.send(`Esse treinador cuida de um equipamento, delete o equipamento ou atribua a outro treinador antes de deletar o ${results.rows[0].nome}`);
+                    } else {
+                            pool.query(queries.deleteTrainer, [email], (error, results) => {
+                            if (error) throw error;
+                            res.status(200).send("Trainer removed sucessfully.");
+                        });                    
+                    }
+                });
+            }
+        });
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("An error occurred while processing your request.");
+    }
 };
+
 
 const countEquipByTrainer = async (req, res) => {
     const email = req.params.email;
     pool.query(queries.countEquipByTrainer, [email], (error, result) => {
         if (error) throw error;
-        console.log(result.rows[0].count);
         return result.rows[0].count;
     })
 };

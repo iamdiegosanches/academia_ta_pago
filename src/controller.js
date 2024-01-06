@@ -4,6 +4,7 @@ const queries = require('./queries');
 const jwtSecret = process.env.JWT_SECRET;
 const jwt = require('jsonwebtoken');
 const { error } = require('console');
+const bcrypt = require('bcrypt');
 
 const getAllClients = async () => {
     return new Promise((resolve, reject) => {
@@ -35,7 +36,7 @@ const addClient = async (req, res) => {
     if (password != password2){
         res.status(202).send("Senhas não coincidem");
     } else {
-        pool.query(queries.getClienteByEmail, [email], (error, results) => {
+        pool.query(queries.getClienteByEmail, [email], async (error, results) => {
             if (error) throw error;
             if (results.rows.length) {
                 res.status(202).send("Email already exists.");
@@ -43,7 +44,9 @@ const addClient = async (req, res) => {
                 return;
             }
             
-            pool.query(queries.addClient, [name, email, cpf, dob, password, objetivo], (error, results) => {
+            const hashedPassword = await bcrypt.hash(password, 10);
+            
+            pool.query(queries.addClient, [name, email, cpf, dob, hashedPassword, objetivo], (error, results) => {
                 if (error) throw error;
                 res.status(201).send("Client Created Sucessfully!");
                 console.log("Client create");
@@ -69,29 +72,34 @@ const removeClient = async (req, res)  => {
     });
 };
 
-const updateClient = (req, res) => {
+const updateClient = async (req, res) => {
     const email = req.params.email;
     const {name, new_email, cpf, dob, password, password3, password2, objetivo} = req.body;
 
-    pool.query(queries.getClienteByEmail, [email], (error, resultado) => {
+    pool.query(queries.getClienteByEmail, [email], async (error, resultado) => {
         if (error) throw error;
         const noClientFound = !resultado.rows.length;
         if (noClientFound){
             res.send("Client does not exist in the database.");
-        } else if (password3 === resultado.rows[0].senha) {     
-            if (password === password2) {
-                pool.query(queries.updateClient, [new_email, cpf, name, dob, password, objetivo, email], (error, results) => {
-                    if (error) throw error;
-                    res.status(200).send("Client updated sucessfully.");
-                    console.log("Client updated sucessfully");
-                });
-            } else {
-                res.send("Senhas não batem");
-                console.log("Senhas não batem");
-            }
         } else {
-            res.send("Senha antiga incorreta");
-            console.log("Senha antiga incorreta");
+            bcrypt.compare(password3, resultado.rows[0].senha).then(async match => {
+                if (match) {
+                    if (password === password2) {
+                        const hashedPassword = await bcrypt.hash(password, 10);
+                        pool.query(queries.updateClient, [new_email, cpf, name, dob, hashedPassword, objetivo, email], (error, results) => {
+                            if (error) throw error;
+                            res.status(200).send("Client updated sucessfully.");
+                            console.log("Client updated sucessfully");
+                        });
+                    } else {
+                        res.send("Senhas não batem");
+                        console.log("Senhas não batem");
+                    }
+                } else {
+                    res.send("Senha antiga incorreta");
+                    console.log("Senha antiga incorreta");
+                }
+            });
         }
     });
 };
@@ -237,7 +245,6 @@ const qtdEquipments = async () => {
     }
 };
 
-
 const getClientsUseEquip = async (req, res, equipId, data) => {
     try {
         const results = await pool.query(queries.getClientesWorkoutDayAndEquip, [data, equipId]);
@@ -304,14 +311,17 @@ const addTrainer = async (req, res) => {
                 return;
             }
             
-            pool.query(queries.countTrainersCPF, [cpf], (error, result) => {
+            pool.query(queries.countTrainersCPF, [cpf], async (error, result) => {
                 if (error) throw error;
                 let validation = parseInt(result.rows[0].cpf_trainer);
                 if (validation == '1') {
                     res.status(202).send("CPF already exists");
                     console.log('CPF already exists');
                 } else {
-                    pool.query(queries.addTreinador, [email, cpf, name, dob, password, salario], (error, results) => {
+
+                    const hashedPassword = await bcrypt.hash(password, 10);
+
+                    pool.query(queries.addTreinador, [email, cpf, name, dob, hashedPassword, salario], (error, results) => {
                         if (error) throw error;
                         res.status(201).send("Trainer Created Sucessfully!");
                         console.log("Trainer create");
@@ -353,25 +363,31 @@ const countEquipByTrainer = async (req, res) => {
 const updateTrainer = async (req, res) => {
     const email = req.params.email;
     const { name, new_email, cpf, dob, password, password2, password3, salario } = req.body;
-    pool.query(queries.getTreinadorByEmail, [email], (error, resultado) => {
+
+    pool.query(queries.getTreinadorByEmail, [email], async (error, resultado) => {
         if (error) throw error;
         const noTrainerFound = !resultado.rows.length;
         if (noTrainerFound){
             res.send("Trainer does not exist in the database.");
-        } else if (password3 === resultado.rows[0].senha) {     
-            if (password === password2) {
-                pool.query(queries.updateTrainer, [new_email, cpf, name, dob, password2, salario, email], (error, results) => {
-                    if (error) throw error;
-                    res.status(200).send("Trainer updated sucessfully.");
-                    console.log("Trainer updated sucessfully");
-                });
-            } else {
-                res.send("Senhas não batem");
-                console.log("Senhas não batem");
-            }
         } else {
-            res.send("Senha antiga incorreta");
-            console.log("Senha antiga incorreta");
+            bcrypt.compare(password3, resultado.rows[0].senha).then(async match => {
+                if (match) {
+                    if (password === password2) {
+                        const hashedPassword = await bcrypt.hash(password, 10);
+                        pool.query(queries.updateTrainer, [new_email, cpf, name, dob, hashedPassword, salario, email], (error, results) => {
+                            if (error) throw error;
+                            res.status(200).send("Trainer updated sucessfully.");
+                            console.log("Trainer updated sucessfully");
+                        });
+                    } else {
+                        res.send("Senhas não batem");
+                        console.log("Senhas não batem");
+                    }
+                } else {
+                    res.send("Senha antiga incorreta");
+                    console.log("Senha antiga incorreta");
+                }
+            });
         }
     });
 };

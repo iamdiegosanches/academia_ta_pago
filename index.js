@@ -7,6 +7,7 @@ const jwt = require('jsonwebtoken');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const jwtSecret = process.env.JWT_SECRET;
+const bcrypt = require('bcrypt');
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -90,13 +91,15 @@ app.post('/', async (req, res) => {
       if(!trainer) {
         return res.status(500).send('Falha no login'); // ToDo: tratar isso melhor
       } else {
-        if (password === trainer.senha) {
-          const token = jwt.sign({ userId: email, role: 'trainer' }, jwtSecret);
-          res.cookie('token', token, { httpOnly: true });
-          res.redirect(`/trainerDashboard/${email}`); 
-        } else {
-          return res.status(500).send('Senha invalida'); // ToDo: melhorar tratamento para a falha de senha
-        }
+        bcrypt.compare(password, trainer.senha).then(match => {
+          if (match) {
+            const token = jwt.sign({ userId: email, role: 'trainer' }, jwtSecret);
+            res.cookie('token', token, { httpOnly: true });
+            res.redirect(`/trainerDashboard/${email}`); 
+          } else {
+            return res.status(500).send('Senha invalida'); // ToDo: melhorar tratamento para a falha de senha
+          }
+        });
       }
       // ToDo: Tem que testar
     } else if (adm_user === email) {
@@ -107,13 +110,15 @@ app.post('/', async (req, res) => {
         res.redirect('/admDashboard');
       }
     } else {
-      if (password === client.senha) { // ToDo: criptografia
-        const token = jwt.sign({ userId: email, role: 'client' }, jwtSecret);
-        res.cookie('token', token, { httpOnly: true });
-        res.redirect(`/clientDashboard/${email}`);
-      } else {
-        return res.status(500).send('Senha invalida'); // ToDo: tratar isso melhor
-      }
+      bcrypt.compare(password, client.senha).then(match => {
+        if (match) {
+          const token = jwt.sign({ userId: email, role: 'client' }, jwtSecret);
+          res.cookie('token', token, { httpOnly: true });
+          res.redirect(`/clientDashboard/${email}`);
+        } else {
+          return res.status(500).send('Senha invalida'); // ToDo: tratar isso melhor
+        }
+      });
     }
   } catch (error) {
     console.error(error);

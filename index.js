@@ -110,7 +110,7 @@ app.post('/', async (req, res) => {
       if (password === client.senha) { // ToDo: criptografia
         const token = jwt.sign({ userId: email, role: 'client' }, jwtSecret);
         res.cookie('token', token, { httpOnly: true });
-        res.redirect('/total-weight'); // ToDo: dashboard do cliente
+        res.redirect(`/clientDashboard/${email}`);
       } else {
         return res.status(500).send('Senha invalida'); // ToDo: tratar isso melhor
       }

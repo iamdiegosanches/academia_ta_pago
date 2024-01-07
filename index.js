@@ -38,9 +38,11 @@ app.get('/create-user', (req, res) => {
   }
 });
 
-app.get('/edit-weight', (req, res) => {
+app.get('/edit-weight', async (req, res) => {
   try {
-    res.render('edit_weight');
+    const email = controller.getTokenEmailID(req);
+    const isClient = await controller.getClientByEmail(email);
+    res.render('edit_weight', { client: isClient });
   } catch (error) {
     console.error('Ocorreu um erro inesperado:', error);
     res.status(500).send('Erro interno do servidor');
@@ -48,9 +50,10 @@ app.get('/edit-weight', (req, res) => {
 });
 
 // ToDo: testar essa funcionalidade
-app.post('/edit-weight', (req, res) => {
+app.post('/edit-weight', authMiddleware(['client']), async (req, res) => {
   try {
     controller.updateWeight(req, res);
+    res.redirect('/clientDashboard');
   } catch (error) {
     res.status(500).json({ error: 'Erro interno do servidor', details: error.message });
   }
@@ -135,7 +138,6 @@ app.get('/addEquipment', async (req, res) => {
   }
 });
 
-
 app.get('/updateEquipment/:id', async (req, res)=>{
   const data = await controller.getEquipmentById(req, res);
   const trainers = await controller.getAllTrainers(req, res);
@@ -159,7 +161,6 @@ app.get('/deleteEquipment/:id', async (req, res)=>{
       console.log(error);
   }
 }); 
-
 
 app.get('/admDashboard', async (req, res) => {
   try {
@@ -284,9 +285,10 @@ app.get('/deleteTrainer/:email', async (req, res)=>{
   }
 });
 
-app.get('/trainerDashboard/:email', async (req, res) => {
+app.get('/trainerDashboard', async (req, res) => {
   try {
-      const isTrainer = await controller.getTrainerByEmail(req.params.email);
+      const email = controller.getTokenEmailID(req);
+      const isTrainer = controller.getTrainerByEmail(email);
       if (isTrainer){
           const equip = await controller.getEquipmentByPersonal(req, res);
           if (equip.length == 0) {
@@ -306,9 +308,10 @@ app.get('/trainerDashboard/:email', async (req, res) => {
   }
 });
 
-app.get('/trainerDashboard/:email/:filter', async (req, res) => {
+app.get('/trainerDashboard/:filter', async (req, res) => {
   try {
-      const isTrainer = await controller.getTrainerByEmail(req.params.email);
+      const email = controller.getTokenEmailID(req);
+      const isTrainer = await controller.getTrainerByEmail(email);
       if (isTrainer) {
           const equip = await controller.getEquipmentByPersonal(req, res);
           let data;
@@ -359,16 +362,16 @@ app.post('/registrarUso/:id', (req, res) => {
   }
 });
 
-app.get('/clientDashboard/:email', async (req, res) => {
+app.get('/clientDashboard', async (req, res) => {
   try {
-    const isClient = await controller.getClientByEmail(req.params.email);
+    const email = controller.getTokenEmailID(req);
+    const isClient = await controller.getClientByEmail(email);
     if (isClient){
-        const email = req.params.email;
         const dataDB = await controller.getEquipmentsUsedToday(email, new Date());
         const total_weight = await controller.getTotalWeightForSpecificMonth(email, new Date());
-        res.render('clientDashboard', {equipment: dataDB, email: email, client: isClient, wight: total_weight } );
+        res.render('clientDashboard', {equipment: dataDB, email: email, client: isClient, weight: total_weight } );
       } else {
-        res.status(500).send("Client not exists");
+        res.status(500).send("O cliente não existe!");
     }
 } catch (error) {
     console.log(error);
@@ -376,13 +379,12 @@ app.get('/clientDashboard/:email', async (req, res) => {
 }
 });
 
-app.get('/clientDashboard/:email/:filter', async (req, res) => {
+app.get('/clientDashboard/:filter', async (req, res) => {
   try {
-    const isClient = await controller.getClientByEmail(req.params.email);
+    const email = controller.getTokenEmailID(req);
+    const isClient = await controller.getClientByEmail(email);
     if (isClient) {
-      const email = req.params.email;
       let data;
-
       switch (req.params.filter) {
           case 'today':
               data = await controller.getEquipmentsUsedToday(email, new Date());
@@ -394,7 +396,6 @@ app.get('/clientDashboard/:email/:filter', async (req, res) => {
               data = await controller.getEquipmentMostUsed(email, new Date());
               break;
       }
-
       res.render('card_data', {data: data });
     } else {
       res.status(500).send("Client not exists");
@@ -404,6 +405,10 @@ app.get('/clientDashboard/:email/:filter', async (req, res) => {
   }
 });
 
+app.get('/logout', (req, res) => {
+  res.clearCookie('token');
+  res.redirect('/');
+});
 
 // Inicia o servidor
 app.listen(PORT, () => {

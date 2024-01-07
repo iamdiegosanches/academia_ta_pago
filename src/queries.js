@@ -104,7 +104,6 @@ const getTotalWeightForSpecificMonth = `
     ORDER BY year DESC, month DESC;
 `;
 
-
 const updateWeight = `
     UPDATE CLIENTE
     SET objetivo = $1

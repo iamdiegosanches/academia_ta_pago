@@ -8,7 +8,7 @@ CREATE TABLE CLIENTE (
 	nome		VARCHAR(50)				NOT NULL,
 	data		DATE,
 	senha		VARCHAR(60)				NOT NULL,
-	objetivo	DOUBLE PRECISION		NOT NULL,
+	objetivo	FLOAT 					NOT NULL,
 	PRIMARY KEY (email),
 	UNIQUE (email),
 	UNIQUE (cpf)

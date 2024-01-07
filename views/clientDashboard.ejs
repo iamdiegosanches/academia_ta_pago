@@ -8,7 +8,6 @@
     <title>Dashboard</title>
 </head>
 <body>
-    
     <div class="dashboard">
         <div class="content">
 
@@ -17,7 +16,11 @@
                 <div class="card">
                     <div class="caracteristicas">
                         <p><strong>Objetivo: </strong><%= client.objetivo %>Kg</p>
-                        <p><strong>Peso total nesse mes: </strong><%= wight[0].total_peso %>    Kg</p>
+                        <% if (weight && weight.length > 0 && weight[0].total_weight) { %>
+                            <p><strong>Peso total nesse mes: </strong><%= weight[0].total_weight %> Kg</p>
+                        <% } else { %>
+                            <p><strong>Peso total nesse mes: </strong>N/A</p>
+                        <% } %>
                         <a href="" class="button"></a>
                     </div>
                 </div>
@@ -55,28 +58,23 @@
         </div>
     </div>
 
-    
 <script>
 $(document).ready(function(){
     $('#applyFilter').click(function(){
         var filter = $('#filter').val();
         console.log(filter);
-        
-        <% if (equipment && equipment.length > 0) { %>
-            $.ajax({
-                url: '/clientDashboard/<%= email %>/' + filter,
-                type: 'GET',
-                success: function(data){
-                    $('#data').html(data);
-                }
-            });
-        <% } else { %>
-            console.log('No equipment used.');
-        <% } %>
+        var email = '<%= email %>';
+        $.ajax({
+            url: '/clientDashboard/' + filter,
+            type: 'GET',
+            success: function(data){
+                $('#data').html(data);
+            }
+        });
     });
 });
 
-</script>
 
+</script>
 </body>
 </html> 

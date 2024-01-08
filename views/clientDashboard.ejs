@@ -17,8 +17,8 @@
                     <div class="caracteristicas">
                         <p><strong>Objetivo: </strong><%= client.objetivo %> Kg</p>
                         <p><strong>Peso total nesse mes: </strong>
-                            <% if (wight && wight.length > 0) { %>
-                                <%= wight[0].total_peso %> Kg
+                            <% if (weight && weight.length > 0) { %>
+                                <%= weight[0].total_peso %> Kg
                             <% } else { %>
                                 <p>Você ainda não realizou nenhum exercício</p>
                             <% } %>
@@ -66,7 +66,7 @@
             var filter = $('#filter').val();
             console.log(filter);
             $.ajax({
-                url: '/clientDashboard/<%= email %>/' + filter,
+                url: '/clientDashboard/' + filter,
                 type: 'GET',
                 success: function(data){
                     $('#data').html(data);

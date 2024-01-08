@@ -113,11 +113,13 @@ app.post('/', async (req, res) => {
         res.redirect('/admDashboard');
       }
     } else {
+      console.log(password)
+      console.log(client.senha)
       bcrypt.compare(password, client.senha).then(match => {
         if (match) {
           const token = jwt.sign({ userId: email, role: 'client' }, jwtSecret);
           res.cookie('token', token, { httpOnly: true });
-          res.redirect(`/clientDashboard/${email}`);
+          res.redirect(`/clientDashboard`);
         } else {
           return res.status(500).send('Senha invalida'); // ToDo: tratar isso melhor
         }

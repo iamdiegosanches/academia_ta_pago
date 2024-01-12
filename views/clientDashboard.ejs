@@ -21,6 +21,7 @@
                         <% } else { %>
                             <p><strong>Peso total nesse mes: </strong>N/A</p>
                         <% } %>
+                        <p><strong>Status:</strong> <%= (weight && weight.length > 0 && client.objetivo <= weight[0].total_weight) ? " Tá Pago" : "NÃO Tá Pago"; %></p>
                         <a href="" class="button"></a>
                     </div>
                 </div>

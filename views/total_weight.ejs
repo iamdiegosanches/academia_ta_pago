@@ -16,12 +16,14 @@
                             <div class="equip-item equip-card">
                                 <p><strong>Ano/Mês:</strong> <%= totalWeightData[i].month_year %></p>
                                 <p><strong>Peso Total:</strong> <%= totalWeightData[i].total_peso %> kg</p>
-                                <p><strong>Status:</strong></p>  <!-- ToDo: Adicionar a lógica para exibir status -->
+                                <p><strong>Status:</strong> <%= (totalWeightData && totalWeightData.length > 0 && client.objetivo <= totalWeightData[i].total_peso) ? " Tá Pago" : "NÃO Tá Pago"; %></p>
                             </div>
                     <% } %>
             </div>
         </div>
     </div>
 </body>
+<script>
 
+</script>
 </html>

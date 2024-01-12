@@ -70,8 +70,10 @@ app.get('/weight-of-day', async (req, res) => {
 
 app.get('/total-weight', authMiddleware(['client']) , async (req, res) => {
   try {
+    const email = controller.getTokenEmailID(req);
+    const isClient = await controller.getClientByEmail(email);
     const totalWeightData = await controller.getTWeight(req, res);
-    res.render('total_weight', { totalWeightData: totalWeightData });
+    res.render('total_weight', { totalWeightData: totalWeightData, client:isClient });
   } catch (error) {
     console.error('Ocorreu um erro inesperado:', error);
     res.status(500).send('Erro interno do servidor');

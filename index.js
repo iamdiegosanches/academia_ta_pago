@@ -93,7 +93,16 @@ app.post('/', async (req, res) => {
     if (!client) {
       const trainer = await controller.getTrainerByEmail(email)
       if(!trainer) {
-        return res.status(500).send('Falha no login'); // ToDo: tratar isso melhor
+        if ((adm_user + '@tapago.com') === email) {
+          const adm_password = process.env.DB_PASSWORD;
+          if (password === adm_password) {
+            const token = jwt.sign({ userId: email, role: 'adm' }, jwtSecret);
+            res.cookie('token', token, { httpOnly: true });
+            res.redirect('/admDashboard');
+          }
+        } else {
+          return res.status(500).send('Falha no login'); // ToDo: tratar isso melhor
+        }
       } else {
         if (password === trainer.senha) {
           const token = jwt.sign({ userId: email, role: 'trainer' }, jwtSecret);
@@ -103,14 +112,7 @@ app.post('/', async (req, res) => {
           return res.status(500).send('Senha invalida'); // ToDo: melhorar tratamento para a falha de senha
         }
       }
-      // ToDo: Tem que testar
-    } else if (adm_user === email) {
-      const adm_password = process.env.DB_PASSWORD;
-      if (password === adm_password) {
-        const token = jwt.sign({ userId: email, role: 'adm' }, jwtSecret);
-        res.cookie('token', token, { httpOnly: true });
-        res.redirect('/admDashboard');
-      }
+      // ToDo: testar
     } else {
       if (password === client.senha) { // ToDo: criptografia
         const token = jwt.sign({ userId: email, role: 'client' }, jwtSecret);

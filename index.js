@@ -58,16 +58,6 @@ app.post('/edit-weight', authMiddleware(['client']), async (req, res) => {
   }
 });
 
-app.get('/weight-of-day', async (req, res) => {
-  try {
-    // const totalWeightData = await controller.getTWeight(req, res);
-    res.render('day_weight');
-  } catch (error) {
-    console.error('Ocorreu um erro inesperado:', error);
-    res.status(500).send('Erro interno do servidor');
-  }
-});
-
 app.get('/total-weight', authMiddleware(['client']) , async (req, res) => {
   try {
     const email = controller.getTokenEmailID(req);

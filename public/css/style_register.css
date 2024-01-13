@@ -1,4 +1,3 @@
-/* Reseta as margens, o preenchimento e a caixa de dimensionamento de todos os elementos */
 * {
     margin: 0;
     padding: 0;
@@ -6,103 +5,93 @@
     font-family: Arial, Helvetica, sans-serif;
 }
 
-/* Estiliza o elemento body */
 body {
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh; /* Altura mínima de 100% da altura da janela de visualização */
-    background: #060606 url("../imgs/background.jpg") no-repeat center; /* Cor de fundo e imagem de fundo */
+    min-height: 100vh;
+    background: #060606 url("../imgs/background.jpg") no-repeat center;
 }
 
-/* Estiliza o elemento .card-login */
 .card-login {
     position: relative;
     width: 400px;
-    height: 600px;
-    background: transparent; /* Fundo transparente */
-    border-radius: 20px; /* Bordas arredondadas */
-    border: 2px solid rgba(155, 155, 154, 0.5); /* Borda sólida cinza */
-    backdrop-filter: blur(30px); /* Desfoque do plano de fundo */
-    box-shadow: 0 0 30px rgba(96, 96, 96, 0.5); /* Sombra da caixa cinza */
+    height: 630px;
+    background: transparent;
+    border-radius: 20px;
+    border: 2px solid rgba(155, 155, 154, 0.5);
+    backdrop-filter: blur(30px);
+    box-shadow: 0 0 30px rgba(96, 96, 96, 0.5);
     display: flex;
     justify-content: center;
-    align-items: center; /* Centraliza o conteúdo horizontalmente e verticalmente */
+    align-items: center;
 }
 
-/* Estiliza o elemento .caixa_cadrastro dentro do elemento .card-login */
 .card-login .register {
     width: 100%;
-    padding: 40px; /* Adiciona preenchimento interno */
+    padding: 40px;
 }
 
-/* Estiliza o elemento h2 dentro do elemento .caixa_cadrastro */
 .register h2 {
-    font-size: 2.5em; /* Tamanho da fonte */
-    color: #F8F10D; /* Cor do texto amarelo */
-    text-align: center; /* Alinha o texto ao centro */
-    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black; /* Sombra do texto preta */
+    font-size: 2.5em;
+    color: #F8F10D;
+    text-align: center;
+    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
 }
 
-/* Estiliza o elemento .input-box */
 .input-box {
     position: relative;
     width: 100%;
     height: 50px;
-    border-bottom: 2px solid #F8F10D; /* Borda inferior amarela */
-    margin: 30px 0; /* Adiciona margem superior e inferior */
+    border-bottom: 2px solid #F8F10D;
+    margin: 30px 0;
 }
 
-/* Estiliza o elemento label dentro do elemento .input-box */
 .input-box label {
     position: absolute;
     top: 50%;
     left: 5px;
-    transform: translateY(-50%); /* Centraliza verticalmente */
-    font-size: 1em; /* Tamanho da fonte */
-    color: white; /* Cor do texto branco */
-    font-weight: 500; /* Peso da fonte médio */
+    transform: translateY(-50%);
+    font-size: 1em;
+    color: white;
+    font-weight: 500;
     pointer-events: none; 
-    transition:.5s;/* Transição suave ao mover*/
+    transition:.5s;
 }
 
-/* Move o elemento label para cima quando o campo de entrada está focado ou válido*/
 .input-box input:focus~label,
 .input-box input:valid~label {
      top:-5px;
 }
 
-/* Estiliza o elemento input dentro do elemento .input-box*/
 .input-box input {
      width :100%;
      height :100%;
-     background :transparent;/* Fundo transparente*/
-     border :none;/* Sem borda*/
-     outline :none;/* Sem contorno*/
-     font-size :1em;/* Tamanho da fonte*/
-     color :white;/* Cor do texto branco*/
-     font-weight :600;/* Peso da fonte negrito*/
-     padding :0 35px 0 5px;/* Adiciona preenchimento interno*/
+     background :transparent;
+     border :none;
+     outline :none;
+     font-size :1em;
+     color :white;
+     font-weight :600;
+     padding :0 35px 0 5px;
 }
 
-
-/* Estiliza o elemento .botao*/
 .botao{
      width :100%;
      height :45px;
-     background-color:#F8F10D;/* Cor de fundo amarela*/
-     border-color:black;/* Cor da borda preta*/
-     font-size :1.3em;/* Tamanho da fonte*/
-     color:black;/* Cor do texto preto*/
-     outline:none;/* Sem contorno*/
-     border-radius:6px;/* Bordas arredondadas*/
-     cursor:pointer;/* Cursor do mouse em forma de ponteiro*/
-     transition:.2s;/* Transição suave ao passar o mouse*/
+     margin-top: 10px;
+     background-color:#F8F10D;
+     border-color:black;
+     font-size :1.3em;
+     color:black;
+     outline:none;
+     border-radius:6px;
+     cursor:pointer;
+     transition:.2s;
 }
 
-/* Muda a cor de fundo e a cor do texto ao passar o mouse sobre o elemento .botao */
 .botao:hover{
-     background-color:black;/* Cor de fundo preta*/
-     color:white;/* Cor do texto branco*/
-     border-color:#F8F10D;/* Cor da borda amarela*/
+     background-color:black;
+     color:white;
+     border-color:#F8F10D;
 }

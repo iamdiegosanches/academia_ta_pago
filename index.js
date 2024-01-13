@@ -28,15 +28,6 @@ function formatDate(dateString) {
   return `${day}/${month}/${year}`;
 };
 
-app.get('/create-user', (req, res) => {
-  try {
-    res.render('register_page');
-  } catch (error) {
-    console.error('Ocorreu um erro inesperado:', error);
-    res.status(500).send('Erro interno do servidor');
-  }
-});
-
 app.get('/edit-weight', async (req, res) => {
   try {
     const email = controller.getTokenEmailID(req);

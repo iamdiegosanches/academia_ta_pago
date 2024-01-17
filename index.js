@@ -332,11 +332,15 @@ app.get('/trainerDashboard/:filter', async (req, res) => {
   }
 });
 
-app.get('/registrarUso/:id', async (req, res) => {
+app.get('/registrarUso', async (req, res) => {
   try {
-      const equipId = req.params.id;
+    const email = controller.getTokenEmailID(req);
+    const isTrainer = controller.getTrainerByEmail(email);
+    if (isTrainer) {
+      const equip = await controller.getEquipmentByPersonal(email);
       const clientes = await controller.getAllClients();
-      res.render('registrar_Uso', {equipId: equipId, clientes: clientes});
+      res.render('registrar_Uso', {equipId: equip.id, clientes: clientes});
+    }
   } catch (error) {
       console.log(error);
       res.status(500).send('Internal Server Error');

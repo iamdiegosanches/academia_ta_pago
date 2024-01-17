@@ -173,13 +173,13 @@ const addEquipment = (req, res) => {
     pool.query(queries.getTreinadorByEmail, [email_treinador], (error, results) => {
         if (error) throw error;
         if (!results.rows.length) {
-            res.status(202).send("Trainer not exists.");
-            console.log('Trainer not exists.');
+            res.status(202).send("Treinador não existe.");
+            console.log('Treinador não existe.');
             return;
         } else {
             pool.query(queries.getEquipmentByPersonal, [email_treinador], (error, result) => {
                 if (result.rows.length) {
-                    res.status(201).send("The trainer already has equipment.");
+                    res.status(201).send("Treinador já possui equipamento.");
                     console.log("The trainer already has equipment.");
                 } else {
                     pool.query(queries.addEquipment, [name, email_treinador], (error, results) => {
@@ -200,11 +200,11 @@ const removeEquipment = async (req, res)  => {
         if (error) throw error;
         const noEquipFound = !results.rows.length;
         if (noEquipFound){
-            res.send("Equipment does not exist in the database.");
+            res.send("Equipamento inexistênte.");
         } else {
             pool.query(queries.deleteEquipment, [id], (error, results) => {
                 if (error) throw error;
-                res.status(200).send("Equipment removed sucessfully.");
+                res.redirect('/admDashboard');
             })
         }
     });
@@ -228,16 +228,16 @@ const updateEquipment = (req, res) => {
     });
 };
 
-const getEquipmentByPersonal = async (req, res) => {
-    try {
-        const email = req.params.email;
-        
-        const equip = await pool.query(queries.getEquipmentByPersonal, [email]);
-        return equip.rows;
-
-    } catch (error) {
-        console.log(error);
-    }
+const getEquipmentByPersonal = async (email) => {
+    return new Promise((resolve, reject) => {
+        pool.query(queries.getEquipmentByPersonal, [email], (error, results) => {
+            if (error) {
+                reject(error);
+            } else {
+                resolve(results.rows[0]);
+            }
+        })
+    })
 };
 
 const getEquipmentById = async (req, res) => {

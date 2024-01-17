@@ -11,22 +11,19 @@
     
     <div class="dashboard">
         <div class="content">
-
             <div class="box">
                 <h2>Equipamento</h2>
                 <div class="card">
                     <div class="list-equip">
-                        <% if (equip && equip.length > 0) { %>
-                            <% for (let i = 0; i < equip.length; i++) { %>
+                        <% if (equip) { %>
                                 <div class="card-equip">
-                                    <p><strong>Id:</strong> <%= equip[i].id %></p>
-                                    <p><strong>Nome:</strong> <%= equip[i].nome %></p>
-                                    <p><strong>Email Treinador:</strong> <%= equip[i].email_treinador %></p>
+                                    <p><strong>Id:</strong> <%= equip.id %></p>
+                                    <p><strong>Nome:</strong> <%= equip.nome %></p>
+                                    <p><strong>Email Treinador:</strong> <%= equip.email_treinador %></p>
                                 </div>
-                            <% } %>
                         <% } else { %>
                             <div class="card-equip alert">
-                                <p>You don't have any equipment.</p>
+                                <p>Você não possui nenhum equipamento.</p>
                                 <p><strong>If this is an issue, please contact your boss to have your equipment added to the database.</strong></p>
                             </div>
                         <% } %>
@@ -79,7 +76,6 @@ $(document).ready(function(){
     $('#applyFilter').click(function(){
         var filter = $('#filter').val();
         console.log(filter);
-        
         <% if (equip && equip.length > 0) { %>
             $.ajax({
                 url: '/trainerDashboard/' + filter,

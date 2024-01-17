@@ -279,13 +279,13 @@ app.get('/trainerDashboard', async (req, res) => {
       const email = controller.getTokenEmailID(req);
       const isTrainer = controller.getTrainerByEmail(email);
       if (isTrainer){
-          const equip = await controller.getEquipmentByPersonal(req, res);
+          const equip = await controller.getEquipmentByPersonal(email);
           if (equip.length == 0) {
               const clientsUseEquip = [];
               res.render('trainerDashboard', { equip: equip, clients: clientsUseEquip });
           } else {
               const data = new Date();
-              const clientsUseEquip = await controller.getClientsUseEquip(req, res, equip[0].id, data);
+              const clientsUseEquip = await controller.getClientsUseEquip(req, res, equip.id, data);
               res.render('trainerDashboard', { equip: equip, clients: clientsUseEquip });
           }
       } else {

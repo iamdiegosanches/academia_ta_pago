@@ -5,8 +5,67 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/public/css/style_trainerDash.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="/public/css/style_header.css">
     <title>Dashboard</title>
 </head>
+
+<header>
+    <div class="navbar fixed-icons">
+        <div class="menu-icon" onclick="toggleNav()">
+            <ion-icon name="menu-outline"></ion-icon>
+        </div>
+        <div class="mini-nav-items">
+            <a href="/trainerDashboard">
+              <div class="icon-link">
+                <span class="icon"><ion-icon name="home-outline"></ion-icon></span>
+              </div>
+            </a>
+            <a href="/registrar_Uso/<%= equip[0].id %>">
+              <div class="icon-link">
+                <span class="icon"><ion-icon name="person-add-outline"></ion-icon></span>
+              </div>
+            </a>
+            <a href="/logout">
+              <div class="icon-link">
+                <span class="icon"><ion-icon name="log-out-outline"></ion-icon></span>
+              </div>
+            </a>
+        </div>
+    
+        <ul class="nav-items">
+            <li><a href="/trainerDashboard"><span class="icon"><ion-icon name="home-outline"></ion-icon></span>Home</a></li>
+            <li><a href="/registrar_Uso/<%= equip[0].id %>"><span class="icon"><ion-icon name="person-outline"></ion-icon></span>Adicionar Cliente</a></li>
+            <li><a href="/logout"><span class="icon"><ion-icon name="log-out-outline"></ion-icon></span>Logout</a></li>
+        </ul>
+      </div>
+    
+      <script>
+        function toggleNav() {
+            const navItems = document.querySelector('.nav-items');
+            navItems.classList.toggle('show');
+            document.querySelector('.navbar').classList.toggle('show');
+        
+            const menuIcon = document.querySelector('.menu-icon');
+            menuIcon.classList.toggle('rotate');
+            menuIcon.classList.toggle('align');
+            
+            const navLinks = document.querySelectorAll('.nav-items li a');
+        
+            const miniNavItems = document.querySelector('.mini-nav-items');
+            miniNavItems.classList.toggle('hide');
+        
+            if (navItems.classList.contains('show')) {
+            navLinks.forEach(link => link.style.fontSize = 'medium');
+            } else {
+            navLinks.forEach(link => link.style.fontSize = 'small');
+            }
+        };
+      </script>
+      <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+      <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</header>
+
+
 <body>
     
     <div class="dashboard">

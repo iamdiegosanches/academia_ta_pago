@@ -8,9 +8,11 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const jwtSecret = process.env.JWT_SECRET;
 const bcrypt = require('bcrypt');
+const partials = require('express-partials');
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(partials());
 
 const PORT = process.env.PORT || 3000;
 
@@ -98,7 +100,7 @@ app.post('/', async (req, res) => {
           if (match) {
             const token = jwt.sign({ userId: email, role: 'trainer' }, jwtSecret);
             res.cookie('token', token, { httpOnly: true });
-            res.redirect(`/trainerDashboard/${email}`); 
+            res.redirect(`/trainerDashboard`); 
           } else {
             return res.status(500).send('Senha invalida'); // ToDo: melhorar tratamento para a falha de senha
           }
@@ -280,7 +282,6 @@ app.post('/updateTrainer/:email', async (req, res)=>{
 app.get('/deleteTrainer/:email', async (req, res)=>{
   try {
       const validation = controller.countEquipByTrainer(req, res);
-      // Queria fazer uma parte para enviar uma mensagem para o adm confirmar se quer mesmo excluir
       controller.removeTrainer(req, res);
   } catch (error) {
       console.log(error);

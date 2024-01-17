@@ -118,6 +118,15 @@ app.get('/addEquipment', async (req, res) => {
   }
 });
 
+app.post('/addEquipment', async (req, res) => {
+  try {
+    controller.addEquipment(req, res);
+  } catch (error) {
+    console.log('Error in adding Trainer');
+    console.log(error);
+  }
+})
+
 app.get('/updateEquipment/:id', async (req, res)=>{
   const data = await controller.getEquipmentById(req, res);
   const trainers = await controller.getAllTrainers(req, res);

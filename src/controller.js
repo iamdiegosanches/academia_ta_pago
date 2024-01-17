@@ -184,7 +184,7 @@ const addEquipment = (req, res) => {
                 } else {
                     pool.query(queries.addEquipment, [name, email_treinador], (error, results) => {
                         if (error) throw error;
-                        res.status(201).send("Equipment Created Sucessfully");
+                        res.redirect('/admDashboard');
                         console.log('Equipment Created Sucessfully');
                     });
                 }
@@ -335,7 +335,7 @@ const addTrainer = async (req, res) => {
                 } else {
                     pool.query(queries.addTreinador, [email, cpf, name, dob, password, salario], (error, results) => {
                         if (error) throw error;
-                        res.status(201).send("Trainer Created Sucessfully!");
+                        res.redirect('/admDashboard');
                         console.log("Trainer create");
                     });
                 }

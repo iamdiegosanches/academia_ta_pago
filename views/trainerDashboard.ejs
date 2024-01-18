@@ -20,7 +20,7 @@
                 <span class="icon"><ion-icon name="home-outline"></ion-icon></span>
               </div>
             </a>
-            <a href="/registrar_Uso/<%= equip[0].id %>">
+            <a href="/registrarUso">
               <div class="icon-link">
                 <span class="icon"><ion-icon name="person-add-outline"></ion-icon></span>
               </div>
@@ -34,7 +34,7 @@
     
         <ul class="nav-items">
             <li><a href="/trainerDashboard"><span class="icon"><ion-icon name="home-outline"></ion-icon></span>Home</a></li>
-            <li><a href="/registrar_Uso/<%= equip[0].id %>"><span class="icon"><ion-icon name="person-outline"></ion-icon></span>Adicionar Cliente</a></li>
+            <li><a href="/registrar_Uso/<%= equip.id %>"><span class="icon"><ion-icon name="person-outline"></ion-icon></span>Adicionar Cliente</a></li>
             <li><a href="/logout"><span class="icon"><ion-icon name="log-out-outline"></ion-icon></span>Logout</a></li>
         </ul>
       </div>
@@ -75,17 +75,15 @@
                 <h2>Equipamento</h2>
                 <div class="card">
                     <div class="list-equip">
-                        <% if (equip && equip.length > 0) { %>
-                            <% for (let i = 0; i < equip.length; i++) { %>
-                                <div class="card-equip">
-                                    <p><strong>Id:</strong> <%= equip[i].id %></p>
-                                    <p><strong>Nome:</strong> <%= equip[i].nome %></p>
-                                    <p><strong>Email Treinador:</strong> <%= equip[i].email_treinador %></p>
-                                </div>
-                            <% } %>
+                        <% if (equip) { %>
+                            <div class="card-equip">
+                                <p><strong>Id:</strong> <%= equip.id %></p>
+                                <p><strong>Nome:</strong> <%= equip.nome %></p>
+                                <p><strong>Email Treinador:</strong> <%= equip.email_treinador %></p>
+                            </div>
                         <% } else { %>
                             <div class="card-equip alert">
-                                <p>You don't have any equipment.</p>
+                                <p>Você não possui nenhum equipamento.</p>
                                 <p><strong>If this is an issue, please contact your boss to have your equipment added to the database.</strong></p>
                             </div>
                         <% } %>

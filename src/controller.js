@@ -192,7 +192,7 @@ const addEquipment = (req, res) => {
                 } else {
                     pool.query(queries.addEquipment, [name, email_treinador], (error, results) => {
                         if (error) throw error;
-                        res.status(201).send("Equipment Created Sucessfully");
+                        res.redirect('/admDashboard');
                         console.log('Equipment Created Sucessfully');
                     });
                 }
@@ -208,11 +208,11 @@ const removeEquipment = async (req, res)  => {
         if (error) throw error;
         const noEquipFound = !results.rows.length;
         if (noEquipFound){
-            res.send("Equipment does not exist in the database.");
+            res.send("Equipamento inexistênte.");
         } else {
             pool.query(queries.deleteEquipment, [id], (error, results) => {
                 if (error) throw error;
-                res.status(200).send("Equipment removed sucessfully.");
+                res.redirect('/admDashboard');
             })
         }
     });
@@ -236,16 +236,16 @@ const updateEquipment = (req, res) => {
     });
 };
 
-const getEquipmentByPersonal = async (req, res) => {
-    try {
-        const email = req.params.email;
-        
-        const equip = await pool.query(queries.getEquipmentByPersonal, [email]);
-        return equip.rows;
-
-    } catch (error) {
-        console.log(error);
-    }
+const getEquipmentByPersonal = async (email) => {
+    return new Promise((resolve, reject) => {
+        pool.query(queries.getEquipmentByPersonal, [email], (error, results) => {
+            if (error) {
+                reject(error);
+            } else {
+                resolve(results.rows[0]);
+            }
+        })
+    })
 };
 
 const getEquipmentById = async (req, res) => {
@@ -337,16 +337,15 @@ const addTrainer = async (req, res) => {
                 if (error) throw error;
                 let validation = parseInt(result.rows[0].cpf_trainer);
                 if (validation == '1') {
-                    res.status(202).send("CPF already exists");
-                    console.log('CPF already exists');
+                    res.status(202).send("CPF já existente");
                 } else {
 
                     const hashedPassword = await bcrypt.hash(password, 10);
 
                     pool.query(queries.addTreinador, [email, cpf, name, dob, hashedPassword, salario], (error, results) => {
                         if (error) throw error;
-                        res.status(201).send("Trainer Created Sucessfully!");
-                        console.log("Trainer create");
+                        res.redirect('/admDashboard');
+                        console.log("Trainer created.");
                     });
                 }
             });
@@ -440,7 +439,7 @@ const registrarUso = async (req, res) => {
         const { data, email, peso, repeticao } = req.body;
         pool.query(queries.registerUse, [data, email, equipId, peso, repeticao], (error, results) => {
             if (error) console.log(error);
-            res.status(201).send("Register Sucessfully!");
+            res.redirect('/trainerDashboard')
             console.log("Register Sucessfully!");
         });
     } catch (error) {

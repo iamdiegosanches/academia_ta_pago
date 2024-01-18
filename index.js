@@ -31,15 +31,6 @@ function formatDate(dateString) {
   return `${day}/${month}/${year}`;
 };
 
-app.get('/create-user', (req, res) => {
-  try {
-    res.render('register_page');
-  } catch (error) {
-    console.error('Ocorreu um erro inesperado:', error);
-    res.status(500).send('Erro interno do servidor');
-  }
-});
-
 app.get('/edit-weight', async (req, res) => {
   try {
     const email = controller.getTokenEmailID(req);
@@ -61,20 +52,13 @@ app.post('/edit-weight', authMiddleware(['client']), async (req, res) => {
   }
 });
 
-app.get('/weight-of-day', async (req, res) => {
-  try {
-    // const totalWeightData = await controller.getTWeight(req, res);
-    res.render('day_weight');
-  } catch (error) {
-    console.error('Ocorreu um erro inesperado:', error);
-    res.status(500).send('Erro interno do servidor');
-  }
-});
-
 app.get('/total-weight', authMiddleware(['client']) , async (req, res) => {
   try {
+    const email = controller.getTokenEmailID(req);
+    const isClient = await controller.getClientByEmail(email);
     const totalWeightData = await controller.getTWeight(req, res);
     res.render('total_weight', { totalWeightData: totalWeightData });
+    res.render('total_weight', { totalWeightData: totalWeightData, client:isClient });
   } catch (error) {
     console.error('Ocorreu um erro inesperado:', error);
     res.status(500).send('Erro interno do servidor');
@@ -92,31 +76,34 @@ app.post('/', async (req, res) => {
     const client = await controller.getClientByEmail(email);
     const adm_user = process.env.DB_USER;
     if (!client) {
-      const trainer = await controller.getTrainerByEmail(email)
-      if(!trainer) {
-        return res.status(500).send('Falha no login'); // ToDo: tratar isso melhor
+      const trainer = await controller.getTrainerByEmail(email);
+      if (!trainer) {
+        if ((adm_user + '@tapago.com') === email) {
+          const adm_password = process.env.DB_PASSWORD;
+          if (password === adm_password) {
+            const token = jwt.sign({ userId: email, role: 'adm' }, jwtSecret);
+            res.cookie('token', token, { httpOnly: true });
+            res.redirect('/admDashboard');
+          } else {
+            return res.status(500).send('Falha no login'); // ToDo: tratar isso melhor
+          }
+        } else {
+          return res.status(500).send('Falha no login'); // ToDo: tratar isso melhor
+        }
       } else {
         bcrypt.compare(password, trainer.senha).then(match => {
           if (match) {
             const token = jwt.sign({ userId: email, role: 'trainer' }, jwtSecret);
             res.cookie('token', token, { httpOnly: true });
-            res.redirect(`/trainerDashboard`); 
+            res.redirect(`/trainerDashboard`);
           } else {
             return res.status(500).send('Senha invalida'); // ToDo: melhorar tratamento para a falha de senha
           }
         });
       }
-      // ToDo: Tem que testar
-    } else if (adm_user === email) {
-      const adm_password = process.env.DB_PASSWORD;
-      if (password === adm_password) {
-        const token = jwt.sign({ userId: email, role: 'adm' }, jwtSecret);
-        res.cookie('token', token, { httpOnly: true });
-        res.redirect('/admDashboard');
-      }
     } else {
-      console.log(password)
-      console.log(client.senha)
+      console.log(password);
+      console.log(client.senha);
       bcrypt.compare(password, client.senha).then(match => {
         if (match) {
           const token = jwt.sign({ userId: email, role: 'client' }, jwtSecret);
@@ -141,6 +128,15 @@ app.get('/addEquipment', async (req, res) => {
       console.log(error);
   }
 });
+
+app.post('/addEquipment', async (req, res) => {
+  try {
+    controller.addEquipment(req, res);
+  } catch (error) {
+    console.log('Error in adding Trainer');
+    console.log(error);
+  }
+})
 
 app.get('/updateEquipment/:id', async (req, res)=>{
   const data = await controller.getEquipmentById(req, res);
@@ -293,13 +289,13 @@ app.get('/trainerDashboard', async (req, res) => {
       const email = controller.getTokenEmailID(req);
       const isTrainer = controller.getTrainerByEmail(email);
       if (isTrainer){
-          const equip = await controller.getEquipmentByPersonal(req, res);
+          const equip = await controller.getEquipmentByPersonal(email);
           if (equip.length == 0) {
               const clientsUseEquip = [];
               res.render('trainerDashboard', { equip: equip, clients: clientsUseEquip });
           } else {
               const data = new Date();
-              const clientsUseEquip = await controller.getClientsUseEquip(req, res, equip[0].id, data);
+              const clientsUseEquip = await controller.getClientsUseEquip(req, res, equip.id, data);
               res.render('trainerDashboard', { equip: equip, clients: clientsUseEquip });
           }
       } else {
@@ -346,11 +342,15 @@ app.get('/trainerDashboard/:filter', async (req, res) => {
   }
 });
 
-app.get('/registrarUso/:id', async (req, res) => {
+app.get('/registrarUso', async (req, res) => {
   try {
-      const equipId = req.params.id;
-      const clientes = await controller.getAllClients();
-      res.render('registrar_Uso', {equipId: equipId, clientes: clientes});
+      const email = controller.getTokenEmailID(req);
+      const isTrainer = controller.getTrainerByEmail(email);
+      if (isTrainer) {
+        const equip = await controller.getEquipmentByPersonal(email);
+        const clientes = await controller.getAllClients();
+        res.render('registrar_Uso', {equipId: equip.id, clientes: clientes});
+      }
   } catch (error) {
       console.log(error);
       res.status(500).send('Internal Server Error');

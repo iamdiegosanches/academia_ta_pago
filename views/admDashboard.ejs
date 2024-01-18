@@ -7,7 +7,83 @@
     <title>Dashboaard</title>
     <link rel="stylesheet" href="/public/css/style_admDashboard.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="/public/css/style_header.css">
 </head>
+
+<header>
+    <div class="navbar fixed-icons">
+        <div class="menu-icon" onclick="toggleNav()">
+            <ion-icon name="menu-outline"></ion-icon>
+        </div>
+        <div class="mini-nav-items">
+            <a href="/admDashboard">
+              <div class="icon-link">
+                <span class="icon"><ion-icon name="home-outline"></ion-icon></span>
+              </div>
+            </a>
+            <a href="/addClient">
+              <div class="icon-link">
+                <span class="icon"><ion-icon name="person-outline"></ion-icon></span>
+              </div>
+            </a>
+            <a href="/addEquipment">
+              <div class="icon-link">
+                <span class="icon"><ion-icon name="barbell-outline"></ion-icon></span>
+              </div>
+            </a>
+            <a href="/addTrainer">
+              <div class="icon-link">
+                <span class="icon"><ion-icon name="body-outline"></ion-icon></span>
+              </div>
+            </a>
+            <a href="/create-user">
+              <div class="icon-link">
+                <span class="icon"><ion-icon name="person-add-outline"></ion-icon></span>
+              </div>
+            </a>
+            <a href="/logout">
+              <div class="icon-link">
+                <span class="icon"><ion-icon name="log-out-outline"></ion-icon></span>
+              </div>
+            </a>
+        </div>
+    
+        <ul class="nav-items">
+            <li><a href="/admDashboard"><span class="icon"><ion-icon name="home-outline"></ion-icon></span>Home</a></li>
+            <li><a href="/addClient"><span class="icon"><ion-icon name="person-outline"></ion-icon></span>Adicionar Cliente</a></li>
+            <li><a href="/addEquipment"><span class="icon"><ion-icon name="barbell-outline"></ion-icon></span>Adicionar Equipamento</a></li>
+            <li><a href="/addTrainer"><span class="icon"><ion-icon name="body-outline"></ion-icon></span>Adicionar Treinador</a></li>
+            <li><a href="/create-user"><span class="icon"><ion-icon name="person-add-outline"></ion-icon></span>Criar usuário</a></li>
+            <li><a href="/logout"><span class="icon"><ion-icon name="log-out-outline"></ion-icon></span>Logout</a></li>
+        </ul>
+      </div>
+    
+      <script>
+        function toggleNav() {
+            const navItems = document.querySelector('.nav-items');
+            navItems.classList.toggle('show');
+            document.querySelector('.navbar').classList.toggle('show');
+        
+            const menuIcon = document.querySelector('.menu-icon');
+            menuIcon.classList.toggle('rotate');
+            menuIcon.classList.toggle('align');
+            
+            const navLinks = document.querySelectorAll('.nav-items li a');
+        
+            const miniNavItems = document.querySelector('.mini-nav-items');
+            miniNavItems.classList.toggle('hide');
+        
+            if (navItems.classList.contains('show')) {
+            navLinks.forEach(link => link.style.fontSize = 'medium');
+            } else {
+            navLinks.forEach(link => link.style.fontSize = 'small');
+            }
+        };
+      </script>
+      <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+      <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</header>
+
 
 <body>
 
@@ -152,36 +228,42 @@
         </div>
     </div>
 
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+          <span class="close">&times;</span>
+          <p>Tem certeza que deseja excluir o treinador?</p>
+          <button class="button" id="confirm">Sim</button>
+          <button class="button" id="cancel">Não</button>
+        </div>
+    </div>
+
     <script>
-        const carousel = document.querySelector('#carousel');
-        const previousButton = document.querySelector('#previous');
-        const nextButton = document.querySelector('#next');
 
-        let currentSlide = 0;
-        const slides = Array.from(carousel.children);
-
-        previousButton.addEventListener('click', () => {
-            currentSlide--;
-            if (currentSlide < 0) {
-                currentSlide = slides.length - 1;
-            }
-            carousel.style.transform = `translateX(-${currentSlide * 100}%)`;
-        });
-
-        nextButton.addEventListener('click', () => {
-            currentSlide++;
-            if (currentSlide >= slides.length) {
-                currentSlide = 0;
-            }
-            carousel.style.transform = `translateX(-${currentSlide * 100}%)`;
-        });
+        var modal = document.getElementById("myModal");
+        var span = document.getElementsByClassName("close")[0];
+        var cancel = document.getElementById("cancel");
 
         function confirmDelete(email) {
-            const isConfirmed = confirm("Tem certeza que deseja excluir o treinador?");
-            if (isConfirmed) {
+            modal.style.display = "block";
+            document.getElementById("confirm").onclick = function() {
                 window.location.href = `/deleteTrainer/${email}`;
             }
-        };
+        }
+
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        cancel.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+        
     </script>
 
 </body>

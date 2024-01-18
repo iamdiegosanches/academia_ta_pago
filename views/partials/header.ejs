@@ -1,0 +1,74 @@
+<link rel="stylesheet" href="/public/css/style_header.css">
+<header>
+    <div class="navbar fixed-icons">
+        <div class="menu-icon" onclick="toggleNav()">
+            <ion-icon name="menu-outline"></ion-icon>
+        </div>
+        <div class="mini-nav-items">
+            <a href="/admDashboard">
+              <div class="icon-link">
+                <span class="icon"><ion-icon name="home-outline"></ion-icon></span>
+              </div>
+            </a>
+            <a href="/addClient">
+              <div class="icon-link">
+                <span class="icon"><ion-icon name="person-outline"></ion-icon></span>
+              </div>
+            </a>
+            <a href="/addEquipment">
+              <div class="icon-link">
+                <span class="icon"><ion-icon name="barbell-outline"></ion-icon></span>
+              </div>
+            </a>
+            <a href="/addTrainer">
+              <div class="icon-link">
+                <span class="icon"><ion-icon name="body-outline"></ion-icon></span>
+              </div>
+            </a>
+            <a href="/create-user">
+              <div class="icon-link">
+                <span class="icon"><ion-icon name="person-add-outline"></ion-icon></span>
+              </div>
+            </a>
+            <a href="/logout">
+              <div class="icon-link">
+                <span class="icon"><ion-icon name="log-out-outline"></ion-icon></span>
+              </div>
+            </a>
+        </div>
+    
+        <ul class="nav-items">
+            <li><a href="/admDashboard"><span class="icon"><ion-icon name="home-outline"></ion-icon></span>Home</a></li>
+            <li><a href="/addClient"><span class="icon"><ion-icon name="person-outline"></ion-icon></span>Adicionar Cliente</a></li>
+            <li><a href="/addEquipment"><span class="icon"><ion-icon name="barbell-outline"></ion-icon></span>Adicionar Equipamento</a></li>
+            <li><a href="/addTrainer"><span class="icon"><ion-icon name="body-outline"></ion-icon></span>Adicionar Treinador</a></li>
+            <li><a href="/create-user"><span class="icon"><ion-icon name="person-add-outline"></ion-icon></span>Criar usuário</a></li>
+            <li><a href="/logout"><span class="icon"><ion-icon name="log-out-outline"></ion-icon></span>Logout</a></li>
+        </ul>
+      </div>
+    
+      <script>
+        function toggleNav() {
+            const navItems = document.querySelector('.nav-items');
+            navItems.classList.toggle('show');
+            document.querySelector('.navbar').classList.toggle('show');
+        
+            const menuIcon = document.querySelector('.menu-icon');
+            menuIcon.classList.toggle('rotate');
+            menuIcon.classList.toggle('align');
+            
+            const navLinks = document.querySelectorAll('.nav-items li a');
+        
+            const miniNavItems = document.querySelector('.mini-nav-items');
+            miniNavItems.classList.toggle('hide');
+        
+            if (navItems.classList.contains('show')) {
+            navLinks.forEach(link => link.style.fontSize = 'medium');
+            } else {
+            navLinks.forEach(link => link.style.fontSize = 'small');
+            }
+        };
+      </script>
+      <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+      <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</header>

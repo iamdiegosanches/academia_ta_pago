@@ -119,7 +119,7 @@ const getEquipmentsUsedToday = `
 const getEquipmentUsedMonth = `
     SELECT u.peso, u.repeticao, e.nome, t.nome as nome_treinador
     FROM usa u, equipamento e, treinador t
-    WHERE u.email_cliente = $1 AND e.id = u.id_equip AND DATE_PART('month', u.data::timestamp) = DATE_PART('month', $2::timestamp) AND t.email = e.email_treinador
+    WHERE u.email_cliente = $1 AND e.id = u.id_equip AND DATE_PART('month', u.data::timestamp) = DATE_PART('month', $2::timestamp) AND t.email = e.email_treinador AND DATE_PART('year', u.data::timestamp) = DATE_PART('year', $2::timestamp)
 `;
 
 const getEquipmentMostUsed = `

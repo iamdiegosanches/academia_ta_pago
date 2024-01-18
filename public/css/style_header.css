@@ -1,0 +1,131 @@
+header {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+  }
+  
+  .navbar {
+    width: 50px; /* Defina a largura desejada para a barra de navegação vertical */
+    background-color: #0F0F0F;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+    height: 100vh; /* Defina a altura para ocupar a tela inteira */
+  }
+  
+  .nav-items {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: none;
+  }
+  
+  .show .nav-items {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .fixed-icons {
+    position: fixed;
+  }
+  
+  .nav-items li {
+    padding: 15px;
+    display: flex;
+    align-items: center;
+  }
+  
+  .nav-items li:hover {
+    background-color: #F8F10D;
+    border-radius: 10px;
+  }
+  
+  .nav-items li a:hover {
+    color: black;
+  }
+  
+  .nav-items li a {
+    text-decoration: none;
+    color: #fff;
+    font-size: 16px;
+    margin-top: 12px;
+  }
+  
+  .nav-items li a span {
+    margin-right: 10px;
+    font-size: 20px;
+  }
+  
+  .icon-link span:hover {
+    color: #F8F10D;
+  }
+  
+  .mini-nav-items {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .mini-nav-items a {
+    text-decoration: none;
+    color: #fff;
+  }
+  
+  .menu-icon {
+    cursor: pointer;
+    padding: 10px;
+    font-size: 25px;
+  }
+  
+  .menu-icon:hover {
+    background-color: #F8F10D;
+    color: black;
+    border-radius: 10px;
+  }
+  
+  .rotate {
+    transform: rotate(90deg);
+  }
+  
+  .align {
+    align-self: flex-start;
+  }
+  
+  
+  .line {
+    width: 25px;
+    height: 3px;
+    background-color: #fff;
+    margin: 4px; /* Ajuste para melhor espaçamento entre as linhas */
+  }
+  
+  .icon-link {
+      display:flex; 
+      flex-direction:column; 
+      align-items:center; 
+  }
+  
+  .icon-link:hover { 
+      color:#ddd; 
+  }
+  
+  .icon { 
+      margin-top:30px; 
+      font-size: 20px;
+  }
+  
+  .link-icon { 
+      text-decoration:none; 
+      color:#fff; 
+  }
+  
+  .show { 
+      width:200px; /* Defina a largura expandida */ 
+      display:flex; /* Para alinhar o ícone "home" na parte inferior */ 
+  }
+  
+  .hide { 
+      display:none; 
+  }

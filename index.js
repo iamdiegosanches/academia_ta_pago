@@ -7,9 +7,12 @@ const jwt = require('jsonwebtoken');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const jwtSecret = process.env.JWT_SECRET;
+const bcrypt = require('bcrypt');
+const partials = require('express-partials');
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(partials());
 
 const PORT = process.env.PORT || 3000;
 
@@ -93,13 +96,15 @@ app.post('/', async (req, res) => {
       if(!trainer) {
         return res.status(500).send('Falha no login'); // ToDo: tratar isso melhor
       } else {
-        if (password === trainer.senha) {
-          const token = jwt.sign({ userId: email, role: 'trainer' }, jwtSecret);
-          res.cookie('token', token, { httpOnly: true });
-          res.redirect(`/trainerDashboard`); 
-        } else {
-          return res.status(500).send('Senha invalida'); // ToDo: melhorar tratamento para a falha de senha
-        }
+        bcrypt.compare(password, trainer.senha).then(match => {
+          if (match) {
+            const token = jwt.sign({ userId: email, role: 'trainer' }, jwtSecret);
+            res.cookie('token', token, { httpOnly: true });
+            res.redirect(`/trainerDashboard`); 
+          } else {
+            return res.status(500).send('Senha invalida'); // ToDo: melhorar tratamento para a falha de senha
+          }
+        });
       }
       // ToDo: Tem que testar
     } else if (adm_user === email) {
@@ -110,13 +115,17 @@ app.post('/', async (req, res) => {
         res.redirect('/admDashboard');
       }
     } else {
-      if (password === client.senha) { // ToDo: criptografia
-        const token = jwt.sign({ userId: email, role: 'client' }, jwtSecret);
-        res.cookie('token', token, { httpOnly: true });
-        res.redirect(`/clientDashboard`);
-      } else {
-        return res.status(500).send('Senha invalida'); // ToDo: tratar isso melhor
-      }
+      console.log(password)
+      console.log(client.senha)
+      bcrypt.compare(password, client.senha).then(match => {
+        if (match) {
+          const token = jwt.sign({ userId: email, role: 'client' }, jwtSecret);
+          res.cookie('token', token, { httpOnly: true });
+          res.redirect(`/clientDashboard`);
+        } else {
+          return res.status(500).send('Senha invalida'); // ToDo: tratar isso melhor
+        }
+      });
     }
   } catch (error) {
     console.error(error);
@@ -273,7 +282,6 @@ app.post('/updateTrainer/:email', async (req, res)=>{
 app.get('/deleteTrainer/:email', async (req, res)=>{
   try {
       const validation = controller.countEquipByTrainer(req, res);
-      // Queria fazer uma parte para enviar uma mensagem para o adm confirmar se quer mesmo excluir
       controller.removeTrainer(req, res);
   } catch (error) {
       console.log(error);

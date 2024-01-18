@@ -93,6 +93,7 @@
                                 <p>Você ainda não realizou nenhum exercício</p>
                             <% } %>
                         </p>
+                        <p><strong>Status:</strong> <%= (weight && weight.length > 0 && client.objetivo <= weight[0].total_weight) ? " Tá Pago" : "NÃO Tá Pago"; %></p>
                         <button><a href="/total-weight" class="button">Historico de Peso</a></button>
                     </div>
                 </div>

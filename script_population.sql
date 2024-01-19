@@ -16,9 +16,9 @@ CREATE TABLE CLIENTE (
 
 INSERT INTO CLIENTE
    VALUES
-   ('joana@gmail.com', '444.444.444-44', 'Joana Silva', '1990-12-15', 'senha123', 1000),
-   ('lucas@gmail.com', '555.555.555-55', 'Lucas Oliveira', '1985-05-20', 'senha456', 700),
-   ('maria@gmail.com', '666.666.666-66', 'Maria Souza', '2000-08-10', 'senha789', 400);
+   ('joana@gmail.com', '444.444.444-44', 'Joana Silva', '1990-12-15', '$2b$10$TeFhP6TunpWpMPiVycj8MegI5os77i/mngmNYd.Zrh78uTZKRirMW', 1000),
+   ('lucas@gmail.com', '555.555.555-55', 'Lucas Oliveira', '1985-05-20', '$2b$10$23H26/MtpV302luPaBi4BugdjR76xA2.OU8SYQwCGQOZjOMWSODcW', 700),
+   ('maria@gmail.com', '666.666.666-66', 'Maria Souza', '2000-08-10', '$2b$10$70qYd13uDHfuv1ls/ZrEO.3MLBTgPowRvOcpNBrN3z/fQzka4sdHe', 400);
 
 DROP TABLE IF EXISTS TREINADOR CASCADE;
 
@@ -36,9 +36,9 @@ CREATE TABLE TREINADOR (
 
  INSERT INTO TREINADOR
    VALUES
-   ('julho@gmail.com', '111.111.111-11', 'Julho Balestrini', '1944-07-05', '123456', 100000),
-   ('amanda@gmail.com', '222.222.222-22', 'Amanda Nunes', NULL, '987654321', 90000),
-   ('carlos@gmail.com', '333.333.333-33', 'Carlos Almeida', '1980-03-02', '456789', 80000);
+   ('julho@gmail.com', '111.111.111-11', 'Julho Balestrini', '1944-07-05', '$2b$10$zZbdR2Xq7atxlsnXZ9SGtekTKNhYEL4oEc20Xi8cswJ0f2Q2nXhL2', 100000),
+   ('amanda@gmail.com', '222.222.222-22', 'Amanda Nunes', NULL, '$2b$10$PjxuY/ScFeq1yiZm5BCz.eDt0W67gm9FVc8zPYD8.ytODH4nwoCjy', 90000),
+   ('carlos@gmail.com', '333.333.333-33', 'Carlos Almeida', '1980-03-02', '$2b$10$mGXKbxiMvYyrJzG4EGsOru7MjtbHSALr453VBOu0mvRQaSZI7lJbC', 80000);
   
 DROP TABLE IF EXISTS EQUIPAMENTO CASCADE;
 

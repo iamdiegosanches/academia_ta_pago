@@ -357,7 +357,6 @@ const addTrainer = async (req, res) => {
 
 const removeTrainer = async (req, res)  => {
     const email = req.params.email;
-
     try {
         pool.query(queries.getTreinadorByEmail, [email], (error, results) => {
             if (error) throw error;
@@ -371,7 +370,7 @@ const removeTrainer = async (req, res)  => {
                     } else {
                             pool.query(queries.deleteTrainer, [email], (error, results) => {
                             if (error) throw error;
-                            res.status(200).send("Trainer removed sucessfully.");
+                            res.redirect('/admDashboard');
                         });                    
                     }
                 });

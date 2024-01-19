@@ -57,7 +57,6 @@ app.get('/total-weight', authMiddleware(['client']) , async (req, res) => {
     const email = controller.getTokenEmailID(req);
     const isClient = await controller.getClientByEmail(email);
     const totalWeightData = await controller.getTWeight(req, res);
-    res.render('total_weight', { totalWeightData: totalWeightData });
     res.render('total_weight', { totalWeightData: totalWeightData, client:isClient });
   } catch (error) {
     console.error('Ocorreu um erro inesperado:', error);

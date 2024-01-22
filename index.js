@@ -289,7 +289,7 @@ app.get('/trainerDashboard', async (req, res) => {
       const isTrainer = controller.getTrainerByEmail(email);
       if (isTrainer){
           const equip = await controller.getEquipmentByPersonal(email);
-          if (equip.length == 0) {
+          if (!equip) {
               const clientsUseEquip = [];
               res.render('trainerDashboard', { equip: equip, clients: clientsUseEquip });
           } else {

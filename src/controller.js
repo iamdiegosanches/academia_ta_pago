@@ -75,7 +75,7 @@ const removeClient = async (req, res)  => {
         } else {
             pool.query(queries.deleteClient , [email], (error, results) => {
                 if (error) throw error;
-                res.status(200).send("Client removed sucessfully.");
+                res.redirect('/admDashboard');
             })
         }
     });

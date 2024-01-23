@@ -6,7 +6,7 @@ CREATE TABLE CLIENTE (
 	email		VARCHAR(30)				NOT NULL,
 	cpf			VARCHAR(14)				NOT NULL,
 	nome		VARCHAR(50)				NOT NULL,
-	data		DATE,
+	data		DATE	CHECK (data BETWEEN CURRENT_DATE - INTERVAL '150 years' AND CURRENT_DATE),
 	senha		VARCHAR(60)				NOT NULL,
 	objetivo	FLOAT 					NOT NULL,
 	PRIMARY KEY (email),
@@ -29,7 +29,7 @@ CREATE TABLE TREINADOR (
 	email		VARCHAR(30)		NOT NULL,
 	cpf			VARCHAR(14)		NOT NULL,
 	nome		VARCHAR(50)		NOT NULL,
-	data		DATE,
+	data		DATE	CHECK (data BETWEEN CURRENT_DATE - INTERVAL '150 years' AND CURRENT_DATE),
 	senha		VARCHAR(60)		NOT NULL,
 	salario		INTEGER			NOT NULL,
 	PRIMARY KEY (email),
@@ -50,8 +50,8 @@ DROP TABLE IF EXISTS EQUIPAMENTO CASCADE;
 
 CREATE TABLE EQUIPAMENTO (
 	id				UUID DEFAULT uuid_generate_v4 ()	NOT NULL,
-	nome 			VARCHAR(30)	NOT NULL,
-	email_treinador VARCHAR(30)	NOT NULL,
+	nome 			VARCHAR(30)							NOT NULL,
+	email_treinador VARCHAR(30)							UNIQUE,
 	PRIMARY KEY (id),
 	FOREIGN KEY (email_treinador) REFERENCES TREINADOR (email)
 		ON UPDATE CASCADE
@@ -59,13 +59,13 @@ CREATE TABLE EQUIPAMENTO (
 );
 
 INSERT INTO EQUIPAMENTO
-   VALUES
-   ('1a227ae0-a190-11ee-8c90-0242ac120002', 'Esteira', 'julho@tapago.com'),
-   ('1a227ae0-a190-11ee-8c90-0242ac120003', 'Bicicleta Ergométrica', 'amanda@tapago.com'),
-   ('1a227ae0-a190-11ee-8c90-0242ac120004', 'Supino', 'carlos@tapago.com'),
-   ('1a227ae0-a190-11ee-8c90-0242ac120005', 'Caminhada', 'felipe@tapago.com'),
-   ('1a227ae0-a190-11ee-8c90-0242ac120006', 'Remo', 'viviane@tapago.com'),
-   ('1a227ae0-a190-11ee-8c90-0242ac120007', 'Máquina de Musculação', 'rafael@tapago.com');
+VALUES
+  ('1a227ae0-a190-11ee-8c90-0242ac120002', 'Halteres', 'julho@tapago.com'),
+  ('1a227ae0-a190-11ee-8c90-0242ac120003', 'Leg Press', 'amanda@tapago.com'),
+  ('1a227ae0-a190-11ee-8c90-0242ac120004', 'Supino', 'carlos@tapago.com'),
+  ('1a227ae0-a190-11ee-8c90-0242ac120005', 'Cadeira Flexora', 'felipe@tapago.com'),
+  ('1a227ae0-a190-11ee-8c90-0242ac120006', 'Cross Over', 'viviane@tapago.com'),
+  ('1a227ae0-a190-11ee-8c90-0242ac120007', 'Smith', 'rafael@tapago.com');
 
 DROP TABLE IF EXISTS USA CASCADE;
 
@@ -73,7 +73,7 @@ CREATE TABLE USA (
 	data 			DATE		NOT NULL,
 	email_cliente	VARCHAR(30)	NOT NULL,
 	id_equip		UUID		NOT NULL,
-	peso			INTEGER,
+	peso			INTEGER		NOT NULL,
 	repeticao		INTEGER		NOT NULL,
 	PRIMARY KEY (data, email_cliente, id_equip),
 	FOREIGN KEY (email_cliente) REFERENCES CLIENTE (email)
@@ -83,7 +83,6 @@ CREATE TABLE USA (
 		ON UPDATE CASCADE
 		ON DELETE CASCADE
 );
-
 
 INSERT INTO USA
    VALUES

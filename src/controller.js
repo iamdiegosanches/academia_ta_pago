@@ -56,9 +56,12 @@ const addClient = async (req, res) => {
             const hashedPassword = await bcrypt.hash(password, 10);
             
             pool.query(queries.addClient, [name, email, cpf, dob, hashedPassword, objetivo], (error, results) => {
-                if (error) throw error;
-                res.status(201).send("Client Created Sucessfully!");
-                console.log("Client create");
+                if (error) {
+                    res.status(202).send("Data de nascimento incompatível");
+                } else {
+                    res.status(201).send("Client Created Sucessfully!");
+                    console.log("Client create");
+                }
             });
         });
     }
@@ -343,9 +346,12 @@ const addTrainer = async (req, res) => {
                     const hashedPassword = await bcrypt.hash(password, 10);
 
                     pool.query(queries.addTreinador, [email, cpf, name, dob, hashedPassword, salario], (error, results) => {
-                        if (error) throw error;
-                        res.redirect('/admDashboard');
-                        console.log("Trainer created.");
+                        if (error) {
+                            res.status(202).send("Data de nascimento incompatível");
+                        } else {
+                            res.redirect('/admDashboard');
+                            console.log("Trainer created.");
+                        }
                     });
                 }
             });

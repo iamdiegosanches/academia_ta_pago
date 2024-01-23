@@ -10,7 +10,7 @@
       
     <div class="card-container">
         <div class="child">
-          <h2>Update Trainer</h2>
+          <h2>Editar Treinador</h2>
           <div class="card">
             <form id="updateTrainerForm" method="POST" action="/updateTrainer/<%= trainer.email %>">
                 <label for="name">Nome:</label>
@@ -27,8 +27,8 @@
                 </div>
       
                 <label for="dob">Data Nascimento:</label>
-                <input type="date" id="dob" name="dob" required value="<%= trainer.data %>"><br>
-      
+                <input type="date" id="dob" name="dob" required value="<%= trainer.data%>"><br>
+
                 <label for="salario">Salario:</label>
                 <input type="text" id="salario" name="salario" required value="<%= trainer.salario %>"><br>
 

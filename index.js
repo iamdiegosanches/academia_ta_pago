@@ -257,8 +257,18 @@ app.post('/addTrainer', (req, res) => {
 
 app.get('/updateTrainer/:email', async (req, res)=>{
   try {
-    const data = await controller.getTrainerByEmail(req.params.email);
-    res.render('edit_trainer', {trainer: data});
+    const trainer = await controller.getTrainerByEmail(req.params.email);
+
+    
+    const dataFormatada = new Date(trainer.data);
+    console.log(dataFormatada);
+    const ano = dataFormatada.getFullYear();
+    const mes = String(dataFormatada.getMonth() + 1).padStart(2, '0');
+    const dia = String(dataFormatada.getDate()).padStart(2, '0');
+    trainer.data = `${ano}-${mes}-${dia}`;
+    
+
+    res.render('edit_trainer', {trainer: trainer});
   } catch (error) {
     console.log(error);
   }

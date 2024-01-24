@@ -137,11 +137,10 @@
 $(document).ready(function(){
     $('#applyFilter').click(function(){
         var filter = $('#filter').val();
-        console.log(filter);
-        
-        <% if (equip && equip.length > 0) { %>
+        var trainer = '<%=trainer.email%>';
+        <% if (equip) { %>
             $.ajax({
-                url: '/trainerDashboard/' + filter,
+                url: '/trainerDashboard/' + trainer + '/' + filter,
                 type: 'GET',
                 success: function(data){
                     $('#clientData').html(data);

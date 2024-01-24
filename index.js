@@ -259,7 +259,7 @@ app.get('/updateTrainer/:email', async (req, res)=>{
   try {
     const trainer = await controller.getTrainerByEmail(req.params.email);
 
-    
+    // formatando a data    
     const dataFormatada = new Date(trainer.data);
     console.log(dataFormatada);
     const ano = dataFormatada.getFullYear();
@@ -296,7 +296,7 @@ app.get('/deleteTrainer/:email', async (req, res)=>{
 app.get('/trainerDashboard', async (req, res) => {
   try {
       const email = controller.getTokenEmailID(req);
-      const isTrainer = controller.getTrainerByEmail(email);
+      const isTrainer = await controller.getTrainerByEmail(email);
       if (isTrainer){
           const equip = await controller.getEquipmentByPersonal(email);
           if (!equip) {
@@ -305,7 +305,7 @@ app.get('/trainerDashboard', async (req, res) => {
           } else {
               const data = new Date();
               const clientsUseEquip = await controller.getClientsUseEquip(req, res, equip.id, data);
-              res.render('trainerDashboard', { equip: equip, clients: clientsUseEquip });
+              res.render('trainerDashboard', { trainer: isTrainer, equip: equip, clients: clientsUseEquip });
           }
       } else {
           res.status(500).send("Trainer not exists");
@@ -316,45 +316,46 @@ app.get('/trainerDashboard', async (req, res) => {
   }
 });
 
-app.get('/trainerDashboard/:filter', async (req, res) => {
+app.get('/trainerDashboard/:trainer/:filter', async (req, res) => {
   try {
-      const email = controller.getTokenEmailID(req);
-      const isTrainer = await controller.getTrainerByEmail(email);
-      if (isTrainer) {
-          const equip = await controller.getEquipmentByPersonal(req, res);
-          let data;
-
-          switch (req.params.filter) {
-              case 'today':
-                  data = await controller.getClientsUseEquip(req, res, equip[0].id, new Date());
-                  break;
-              case 'yesterday':
-                  let yesterday = new Date();
-                  yesterday.setDate(yesterday.getDate() - 1);
-                  data = await controller.getClientsUseEquip(req, res, equip[0].id, yesterday);
-                  break;
-              case 'thisMonth':
-                  data = await controller.getClientsUseEquipThisMonth(req, res, equip[0].id, new Date());
-                  break;
-              case 'mostUsed':
-                  data = await controller.getClientsUseEquipMostThisYear(req, res, equip[0].id, new Date());
-                  break;
-          }
-
-          res.render('card_client', { clients: data });
-      } else {
-          res.status(500).send("Trainer not exists");
+    const trainerData = req.params.trainer;
+    console.log(trainerData);
+    const isTrainer = await controller.getTrainerByEmail(trainerData);
+    if (isTrainer) {
+      const equip = await controller.getEquipmentByPersonal(isTrainer.email);
+      let data;
+      switch (req.params.filter) {
+        case 'today':
+          data = await controller.getClientsUseEquip(req, res, equip.id, new Date());
+          break;
+        case 'yesterday':
+          let yesterday = new Date();
+          yesterday.setDate(yesterday.getDate() - 1);
+          data = await controller.getClientsUseEquip(req, res, equip.id, yesterday);
+          break;
+        case 'thisMonth':
+          data = await controller.getClientsUseEquipThisMonth(req, res, equip.id, new Date());
+          break;
+        case 'mostUsed':
+          data = await controller.getClientsUseEquipMostThisYear(req, res, equip.id, new Date());
+          break;
       }
+
+      res.render('card_client', { clients: data });
+    } else {
+      res.status(500).send("Trainer not exists");
+    }
   } catch (error) {
-      console.log(error);
-      res.status(500).send("Internal Server Error");
+    console.log(error);
+    res.status(500).send("Internal Server Error");
   }
 });
+
 
 app.get('/registrarUso', async (req, res) => {
   try {
       const email = controller.getTokenEmailID(req);
-      const isTrainer = controller.getTrainerByEmail(email);
+      const isTrainer = await controller.getTrainerByEmail(email);
       if (isTrainer) {
         const equip = await controller.getEquipmentByPersonal(email);
         const clientes = await controller.getAllClients();
@@ -391,21 +392,21 @@ app.get('/clientDashboard', async (req, res) => {
 }
 });
 
-app.get('/clientDashboard/:filter', async (req, res) => {
+app.get('/clientDashboard/:client/:filter', async (req, res) => {
   try {
-    const email = controller.getTokenEmailID(req);
-    const isClient = await controller.getClientByEmail(email);
+    const clientData = req.params.client;
+    const isClient = await controller.getClientByEmail(clientData);
     if (isClient) {
       let data;
       switch (req.params.filter) {
           case 'today':
-              data = await controller.getEquipmentsUsedToday(email, new Date());
+              data = await controller.getEquipmentsUsedToday(clientData, new Date());
               break;
           case 'month':
-              data = await controller.getEquipmentUsedMonth(email, new Date());
+              data = await controller.getEquipmentUsedMonth(clientData, new Date());
               break;
           case 'mostUsed':
-              data = await controller.getEquipmentMostUsed(email, new Date());
+              data = await controller.getEquipmentMostUsed(clientData, new Date());
               break;
       }
       res.render('card_data', {data: data });

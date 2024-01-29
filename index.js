@@ -301,7 +301,7 @@ app.get('/trainerDashboard', async (req, res) => {
           const equip = await controller.getEquipmentByPersonal(email);
           if (!equip) {
               const clientsUseEquip = [];
-              res.render('trainerDashboard', { equip: equip, clients: clientsUseEquip });
+              res.render('trainerDashboard', { trainer: isTrainer, equip: equip, clients: clientsUseEquip });
           } else {
               const data = new Date();
               const clientsUseEquip = await controller.getClientsUseEquip(req, res, equip.id, data);
